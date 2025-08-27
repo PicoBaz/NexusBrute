@@ -1,3 +1,4 @@
 node_modules/
-brute_force_results.csv
+brute_results.json
+brute_results.csv
 .idea
