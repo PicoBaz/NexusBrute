@@ -1,53 +1,52 @@
-# NexusBrute
 
-A sleek, modular brute-force login testing tool built for ethical security audits. NexusBrute empowers developers and security enthusiasts to simulate password attacks on their own systems, highlighting weak credentials and promoting stronger defenses.
+# ╭─── NexusBrute v1.0 ───╮
 
-⚠️ **Ethical Use Only**: This tool is for testing your own systems or with explicit permission. Misuse can lead to legal consequences. Always prioritize security best practices.
+**A Node.js tool for ethical security testing.**  
+NexusBrute is designed for security professionals to perform controlled brute-force tests, generate secure passwords, and analyze API rate limits. Built for precision and compliance, it ensures safe and authorized use.
 
-## Features
-- **Modular Config**: All settings (URL, usernames, password rules) in a single `config.json` file for quick tweaks.
-- **Auto CSRF Extraction**: Seamlessly pulls WP Nonce tokens from WooCommerce/WordPress login pages.
-- **Smart Password Generation**: Combines common patterns with random strings for realistic testing.
-- **Error Resilience**: Automatic retries on transient errors, with configurable delays to avoid locks.
-- **CSV Reporting**: Detailed logs of attempts, including timestamps and response codes.
-- **Node.js Powered**: Lightweight, no bloat—runs anywhere with Node.
+## ╾─ Features
+- **Smart Brute**: Controlled login testing with rate-limiting.
+- **Password Generator**: Creates strong, customizable passwords.
+- **Rate Limit Checker**: Analyzes API request restrictions.
+- **Output**: Exports results in JSON and CSV formats.
+- **Compliance**: Engineered for ethical, legal testing.
 
-## Installation
-1. Clone the repo:
-   ```
-   git clone https://github.com/PicoBaz/NexusBrute.git
-   cd NexusBrute
-   ```
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Edit `config.json` to match your setup (e.g., login URL, usernames).
-
-## Usage
-Run the script:
+## ╾─ Installation
+```bash
+git clone https://github.com/PicoBaz/NexusBrute.git
 ```
-npm start
+```bash
+cd NexusBrute
 ```
-- Output: Progress in console, results in `brute_force_results.csv`.
-- Example config tweak: Increase `maxAttemptsPerUser` for deeper tests, but monitor for rate limits.
+```bash
+npm install axios chalk
+```
+```bash
+node index.js
+```
 
-## Configuration
-Edit `config.json`:
-- `loginUrl`: Target login endpoint.
-- `usernames`: Array of usernames to test.
-- `characters`: Char sets for random passwords.
-- `passwordConfig`: Tune lengths, attempts, delays, and retries.
+## ╾─ Configuration
+Edit `config.json` to customize:
+- `smartBrute`: Target URL, usernames, passwords, delay, max attempts.
+- `passwordGenerator`: Password length, count, special characters.
+- `rateLimitChecker`: Target URL, max requests, interval.
 
-## Extending NexusBrute
-- Add custom patterns in `index.js`.
-- Integrate with external password lists (e.g., load from TXT files).
-- For advanced setups, fork and add parallel processing via worker threads.
+## ╾─ Sample Output
+**brute_results.csv**:
+```
+Operation,Target,Result,Timestamp,Error
+smart_brute,admin:password123,Failed,2025-08-27T15:59:00Z,Unauthorized
+password_gen,generated_password,Zq$9xP#2mWn5,2025-08-27T15:59:01Z,
+rate_limit,https://example.com/api,Request 1: 200,2025-08-27T15:59:02Z,
+```
 
-## Disclaimer
-NexusBrute is an educational tool. Use responsibly—test only what you own. The author assumes no liability for misuse.
+## ╾─ Important Notice
+Use NexusBrute only on systems with explicit permission. Unauthorized use is prohibited and illegal.
 
-## License
+## ╾─ License
 MIT License. See [LICENSE](LICENSE) for details.
 
-Star the repo if it helps your audits! 🌟 Contributions welcome.
+## ╾─ Contribute
+Join the project at `https://github.com/PicoBaz/NexusBrute`. Star, fork, or submit a PR to enhance it! 🚀
+
+# ╰──────────────────────╯
