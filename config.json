@@ -1,17 +1,19 @@
 {
-  "loginUrl": "https://example.com/login",
-  "usernames": ["ali", "sara", "mohammad", "nima", "admin"],
-  "characters": {
-    "lowercase": "abcdefghijklmnopqrstuvwxyz",
-    "uppercase": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    "numbers": "0123456789",
-    "special": "!@#$%^&*()_+-=[]{}|;:,.<>?"
+  "smartBrute": {
+    "targetUrl": "https://example.com/login",
+    "usernames": ["admin", "user"],
+    "passwords": ["password123", "admin123"],
+    "delayMs": 1000,
+    "maxAttempts": 10
   },
-  "passwordConfig": {
-    "minLength": 6,
-    "maxLength": 12,
-    "maxAttemptsPerUser": 50,
-    "delayMs": 1500,
-    "maxRetries": 3
+  "passwordGenerator": {
+    "length": 12,
+    "count": 5,
+    "useSpecialChars": true
+  },
+  "rateLimitChecker": {
+    "targetUrl": "https://example.com/api",
+    "maxRequests": 20,
+    "intervalMs": 500
   }
 }
