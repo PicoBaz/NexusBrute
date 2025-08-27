@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const crypto = require('crypto');
 const axios = require('axios');
 const chalk = require('chalk');
 
