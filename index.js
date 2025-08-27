@@ -92,7 +92,7 @@ async function saveResults() {
   await fs.writeFile('brute_force_results.csv', csv.join('\n'));
 }
 
-async function bruteForceLogin() {
+async function index() {
   for (const username of usernames) {
     const commonPatterns = generateCommonPatterns(username);
     const allPasswords = [...commonPatterns];
@@ -116,6 +116,6 @@ async function bruteForceLogin() {
   await saveResults();
 }
 
-bruteForceLogin().catch(async err => {
+index().catch(async err => {
   await saveResults();
 });

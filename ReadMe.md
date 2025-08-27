@@ -40,7 +40,7 @@ Edit `config.json`:
 - `passwordConfig`: Tune lengths, attempts, delays, and retries.
 
 ## Extending NexusBrute
-- Add custom patterns in `bruteForceLogin.js`.
+- Add custom patterns in `index.js`.
 - Integrate with external password lists (e.g., load from TXT files).
 - For advanced setups, fork and add parallel processing via worker threads.
 

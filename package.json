@@ -2,9 +2,9 @@
   "name": "nexus-brute",
   "version": "1.0.0",
   "description": "A modular brute-force login tester",
-  "main": "bruteForceLogin.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node bruteForceLogin.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "axios": "^1.7.2",
