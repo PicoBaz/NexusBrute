@@ -22,5 +22,12 @@
     "host": "proxy.example.com",
     "port": 8080,
     "protocol": "http"
+  },
+  "wordlistOptimizer": {
+    "inputFile": "wordlist.txt",
+    "outputFile": "optimized_wordlist.txt",
+    "minLength": 6,
+    "removeDuplicates": true,
+    "sortByLength": true
   }
 }
