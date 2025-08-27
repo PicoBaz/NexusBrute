@@ -32,8 +32,9 @@ async function saveResults(results) {
   }
 }
 
-// Load proxy support
+// Load modules
 const proxySupport = require('./modules/proxy_support');
+const wordlistOptimizer = require('./modules/wordlist_optimizer');
 
 // Smart Brute module
 async function smartBrute(config) {
@@ -133,11 +134,17 @@ async function rateLimitChecker(config) {
   await saveResults(results);
 }
 
+// Wordlist Optimizer module
+async function wordlistOptimizerFn(config) {
+  await wordlistOptimizer.optimize(config);
+}
+
 // Main function
 async function main() {
   const config = await loadConfig();
   console.log(chalk.green('[NexusBrute] Initialized with config:', JSON.stringify(config, null, 2)));
 
+  await wordlistOptimizerFn(config);
   await smartBrute(config);
   await passwordGenerator(config);
   await rateLimitChecker(config);
