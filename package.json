@@ -1,15 +1,16 @@
 {
-  "name": "nexus-brute",
+  "name": "nexusbrute",
   "version": "1.0.0",
-  "description": "A modular brute-force login tester",
+  "description": "A Node.js tool for ethical brute-force testing with smart features.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "axios": "^1.7.2",
-    "cheerio": "^1.0.0-rc.12"
+    "axios": "^1.4.0",
+    "chalk": "^4.1.2"
   },
   "author": "PicoBaz",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "https://github.com/PicoBaz/NexusBrute.git"
 }
