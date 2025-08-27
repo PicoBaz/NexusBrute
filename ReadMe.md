@@ -9,6 +9,7 @@ NexusBrute is designed for security professionals to perform controlled brute-fo
 - **Password Generator**: Creates strong, customizable passwords.
 - **Rate Limit Checker**: Analyzes API request restrictions.
 - **Proxy Support**: Stealth requests via configurable proxies.
+- **Wordlist Optimizer**: Streamlines password lists by removing duplicates and sorting.
 - **Output**: Exports results in JSON and CSV formats.
 - **Compliance**: Engineered for ethical, legal testing.
 
@@ -32,6 +33,7 @@ Edit `config.json` to customize:
 - `passwordGenerator`: Password length, count, special characters.
 - `rateLimitChecker`: Target URL, max requests, interval.
 - `proxy`: Proxy settings (`host`, `port`, `protocol`) for stealth requests, e.g., `{ "host": "proxy.example.com", "port": 8080, "protocol": "http" }`.
+- `wordlistOptimizer`: Input/output wordlist files, min length, remove duplicates, sort by length.
 
 
 ## ╾─ Sample Output
