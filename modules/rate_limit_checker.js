@@ -1,11 +1,17 @@
 const axios = require('axios');
 const chalk = require('chalk');
 const proxySupport = require('./proxy_support');
+const sessionLogger = require('./session_logger');
 
-async function check(config) {
+async function check(config, sessionLog) {
     const { targetUrl, maxRequests, intervalMs, useProxy } = config.rateLimitChecker;
     const results = [];
     let blocked = false;
+
+    sessionLog.push(await sessionLogger.log(config, {
+        operation: 'rate_limit_start',
+        details: `Probing ${targetUrl} with ${maxRequests} requests`
+    }));
 
     const axiosInstance = useProxy ? proxySupport.createProxyAxios(config.proxy) : axios;
 
@@ -20,6 +26,10 @@ async function check(config) {
                 error: ''
             });
             console.log(chalk.cyan(`[ATTEMPT ${i + 1}] Status: ${response.status}`));
+            sessionLog.push(await sessionLogger.log(config, {
+                operation: 'rate_limit_result',
+                details: `Request ${i + 1}: Status ${response.status}`
+            }));
         } catch (err) {
             blocked = true;
             results.push({
@@ -30,6 +40,10 @@ async function check(config) {
                 error: err.message
             });
             console.error(chalk.red(`[ERROR] Request ${i + 1}: ${err.message}`));
+            sessionLog.push(await sessionLogger.log(config, {
+                operation: 'rate_limit_error',
+                details: `Request ${i + 1}: Error ${err.message}`
+            }));
             break;
         }
         await new Promise(resolve => setTimeout(resolve, intervalMs));
