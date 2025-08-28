@@ -53,7 +53,6 @@ async function saveResults(results, outputType) {
 }
 
 // Load modules
-const proxySupport = require('./modules/proxy_support');
 const smartBrute = require('./modules/smart_brute');
 const passwordGenerator = require('./modules/password_generator');
 const rateLimitChecker = require('./modules/rate_limit_checker');
