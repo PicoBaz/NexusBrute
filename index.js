@@ -115,6 +115,7 @@ async function showMenu(config) {
     case 'exit':
       console.log(chalk.red('[EXIT] NexusBrute Shutting Down. Stay Secure!'));
       process.exit(0);
+      break;
     default:
       console.log(chalk.red('[ERROR] Invalid choice. Restarting...'));
       await new Promise(resolve => setTimeout(resolve, 1000));
