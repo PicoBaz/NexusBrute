@@ -58,11 +58,12 @@ const passwordGenerator = require('./modules/password_generator');
 const rateLimitChecker = require('./modules/rate_limit_checker');
 const wordlistOptimizer = require('./modules/wordlist_optimizer');
 const apiFuzzer = require('./modules/api_fuzzer');
+const sessionLogger = require('./modules/session_logger');
 
 // Main menu
 async function showMenu(config) {
   console.clear();
-  console.log(chalk.green.bold('┌───[ NexusBrute  - Cyber Vault ]───'));
+  console.log(chalk.green.bold('┌───[ NexusBrute v1.0 - Cyber Vault ]───'));
   await typeEffect(chalk.cyan('> System Booted. Ready for Action.'));
   console.log(chalk.green('└───────────────────────────────┘'));
   console.log(chalk.magenta('Select Module:'));
@@ -91,33 +92,38 @@ async function showMenu(config) {
   console.log(chalk.green('└───────────────────────────────┘'));
 
   let results = [];
+  const sessionLog = [];
+  await sessionLogger.log(config, { operation: 'start', details: `Module selected: ${response.module}` });
+
   switch (response.module) {
     case 'smart_brute':
       console.log(chalk.cyan('[INFO] Engaging Smart Brute...'));
-      results = await smartBrute.brute(config);
+      results = await smartBrute.brute(config, sessionLog);
       break;
     case 'password_gen':
       console.log(chalk.cyan('[INFO] Engaging Password Generator...'));
-      results = await passwordGenerator.generate(config);
+      results = await passwordGenerator.generate(config, sessionLog);
       break;
     case 'rate_limit':
       console.log(chalk.cyan('[INFO] Engaging Rate Limit Checker...'));
-      results = await rateLimitChecker.check(config);
+      results = await rateLimitChecker.check(config, sessionLog);
       break;
     case 'wordlist_optimizer':
       console.log(chalk.cyan('[INFO] Engaging Wordlist Optimizer...'));
-      results = await wordlistOptimizer.optimize(config);
+      results = await wordlistOptimizer.optimize(config, sessionLog);
       break;
     case 'api_fuzzer':
       console.log(chalk.cyan('[INFO] Engaging API Fuzzer...'));
-      results = await apiFuzzer.fuzz(config);
+      results = await apiFuzzer.fuzz(config, sessionLog);
       break;
     case 'exit':
       console.log(chalk.red('[EXIT] NexusBrute Shutting Down. Stay Secure!'));
+      await sessionLogger.log(config, { operation: 'exit', details: 'NexusBrute terminated' });
       process.exit(0);
       break;
     default:
       console.log(chalk.red('[ERROR] Invalid choice. Restarting...'));
+      await sessionLogger.log(config, { operation: 'error', details: 'Invalid module choice' });
       await new Promise(resolve => setTimeout(resolve, 1000));
       return showMenu(config);
   }
@@ -134,13 +140,39 @@ async function showMenu(config) {
     ]
   });
 
+  await sessionLogger.log(config, { operation: 'output', details: `Output format selected: ${outputResponse.output}` });
   await saveResults(results, outputResponse.output);
+  await sessionLogger.save(config, sessionLog);
+
+  // Ask to continue or exit
+  const continueResponse = await prompts({
+    type: 'select',
+    name: 'continue',
+    message: chalk.green('> Continue or Exit?'),
+    choices: [
+      { title: 'Continue', value: 'continue' },
+      { title: 'Exit', value: 'exit' }
+    ]
+  });
+
+  if (continueResponse.continue === 'continue') {
+    await showMenu(config);
+  } else {
+    console.log(chalk.red('[EXIT] NexusBrute Shutting Down. Stay Secure!'));
+    await sessionLogger.log(config, { operation: 'exit', details: 'NexusBrute terminated' });
+    await sessionLogger.save(config, sessionLog);
+    process.exit(0);
+  }
 }
 
 // Main function
 async function main() {
   const config = await loadConfig();
+  await sessionLogger.log(config, { operation: 'init', details: 'NexusBrute initialized' });
   await showMenu(config);
 }
 
-main().catch(err => console.error(chalk.red('[FATAL] NexusBrute crashed:', err.message)));
+main().catch(async err => {
+  console.error(chalk.red('[FATAL] NexusBrute crashed:', err.message));
+  await sessionLogger.log({ sessionLogger: { logFile: 'session.log' } }, { operation: 'error', details: `Crash: ${err.message}` });
+});
