@@ -60,7 +60,7 @@ const rateLimitChecker = require('./modules/rate_limit_checker');
 const wordlistOptimizer = require('./modules/wordlist_optimizer');
 const apiFuzzer = require('./modules/api_fuzzer');
 
-// Main menu with hacker theme
+// Main menu
 async function showMenu(config) {
   console.clear();
   console.log(chalk.green.bold('┌───[ NexusBrute v1.0 - Cyber Vault ]───'));
