@@ -1,9 +1,15 @@
 const fs = require('fs').promises;
 const chalk = require('chalk');
+const sessionLogger = require('./session_logger');
 
-async function optimize(config) {
+async function optimize(config, sessionLog) {
     const { inputFile, outputFile, minLength, removeDuplicates, sortByLength } = config.wordlistOptimizer;
     const results = [];
+
+    sessionLog.push(await sessionLogger.log(config, {
+        operation: 'wordlist_optimizer_start',
+        details: `Optimizing wordlist: ${inputFile}`
+    }));
 
     try {
         // Read input wordlist
@@ -20,6 +26,10 @@ async function optimize(config) {
                 timestamp: new Date().toISOString(),
                 error: ''
             });
+            sessionLog.push(await sessionLogger.log(config, {
+                operation: 'wordlist_optimizer_result',
+                details: `Removed duplicates: ${words.length} unique words`
+            }));
         }
 
         // Sort by length
@@ -32,6 +42,10 @@ async function optimize(config) {
                 timestamp: new Date().toISOString(),
                 error: ''
             });
+            sessionLog.push(await sessionLogger.log(config, {
+                operation: 'wordlist_optimizer_result',
+                details: 'Sorted by length'
+            }));
         }
 
         // Save optimized wordlist
@@ -43,6 +57,10 @@ async function optimize(config) {
             timestamp: new Date().toISOString(),
             error: ''
         });
+        sessionLog.push(await sessionLogger.log(config, {
+            operation: 'wordlist_optimizer_result',
+            details: `Saved optimized wordlist: ${outputFile}`
+        }));
 
         console.log(chalk.green(`[SUCCESS] Wordlist optimized: ${words.length} words saved to ${outputFile}`));
     } catch (err) {
@@ -54,11 +72,13 @@ async function optimize(config) {
             error: err.message
         });
         console.error(chalk.red(`[ERROR] Wordlist optimization failed: ${err.message}`));
+        sessionLog.push(await sessionLogger.log(config, {
+            operation: 'wordlist_optimizer_error',
+            details: `Error: ${err.message}`
+        }));
     }
 
-    // Save results
-    const saveResults = require('../index').saveResults;
-    await saveResults(results);
+    return results;
 }
 
 module.exports = { optimize };
