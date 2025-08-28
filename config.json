@@ -37,5 +37,8 @@
     "maxAttempts": 10,
     "delayMs": 500,
     "useProxy": true
+  },
+  "sessionLogger": {
+    "logFile": "session.log"
   }
 }
