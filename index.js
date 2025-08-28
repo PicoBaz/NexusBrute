@@ -63,7 +63,7 @@ const apiFuzzer = require('./modules/api_fuzzer');
 // Main menu
 async function showMenu(config) {
   console.clear();
-  console.log(chalk.green.bold('┌───[ NexusBrute v1.0 - Cyber Vault ]───'));
+  console.log(chalk.green.bold('┌───[ NexusBrute  - Cyber Vault ]───'));
   await typeEffect(chalk.cyan('> System Booted. Ready for Action.'));
   console.log(chalk.green('└───────────────────────────────┘'));
   console.log(chalk.magenta('Select Module:'));
