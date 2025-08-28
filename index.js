@@ -35,6 +35,7 @@ async function saveResults(results) {
 // Load modules
 const proxySupport = require('./modules/proxy_support');
 const wordlistOptimizer = require('./modules/wordlist_optimizer');
+const apiFuzzer = require('./modules/api_fuzzer');
 
 // Smart Brute module
 async function smartBrute(config) {
@@ -139,12 +140,18 @@ async function wordlistOptimizerFn(config) {
   await wordlistOptimizer.optimize(config);
 }
 
+// API Fuzzer module
+async function apiFuzzerFn(config) {
+  await apiFuzzer.fuzz(config);
+}
+
 // Main function
 async function main() {
   const config = await loadConfig();
   console.log(chalk.green('[NexusBrute] Initialized with config:', JSON.stringify(config, null, 2)));
 
   await wordlistOptimizerFn(config);
+  await apiFuzzerFn(config);
   await smartBrute(config);
   await passwordGenerator(config);
   await rateLimitChecker(config);
