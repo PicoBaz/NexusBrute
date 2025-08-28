@@ -1,7 +1,6 @@
 const fs = require('fs').promises;
-const crypto = require('crypto');
-const axios = require('axios');
 const chalk = require('chalk');
+const prompts = require('prompts');
 
 const CONFIG_FILE = 'config.json';
 const RESULTS_JSON = 'brute_results.json';
@@ -18,15 +17,36 @@ async function loadConfig() {
   }
 }
 
-// Save results
-async function saveResults(results) {
+// Type effect for CLI
+function typeEffect(text) {
+  return new Promise(resolve => {
+    let i = 0;
+    const interval = setInterval(() => {
+      process.stdout.write(text[i]);
+      i++;
+      if (i === text.length) {
+        clearInterval(interval);
+        console.log();
+        resolve();
+      }
+    }, 30);
+  });
+}
+
+// Save results based on user choice
+async function saveResults(results, outputType) {
   try {
-    await fs.writeFile(RESULTS_JSON, JSON.stringify(results, null, 2));
-    const csv = ['Operation,Target,Result,Timestamp,Error']
-        .concat(results.map(r => `"${r.operation}","${r.target}","${r.result}","${r.timestamp}","${r.error || ''}"`))
-        .join('\n');
-    await fs.writeFile(RESULTS_CSV, csv);
-    console.log(chalk.green('[SUCCESS] Results saved to brute_results.json and brute_results.csv'));
+    if (outputType === 'json' || outputType === 'both') {
+      await fs.writeFile(RESULTS_JSON, JSON.stringify(results, null, 2));
+      console.log(chalk.green(`[SUCCESS] Saved JSON to ${RESULTS_JSON}`));
+    }
+    if (outputType === 'csv' || outputType === 'both') {
+      const csv = ['Operation,Target,Result,Timestamp,Error']
+          .concat(results.map(r => `"${r.operation}","${r.target}","${r.result}","${r.timestamp}","${r.error || ''}"`))
+          .join('\n');
+      await fs.writeFile(RESULTS_CSV, csv);
+      console.log(chalk.green(`[SUCCESS] Saved CSV to ${RESULTS_CSV}`));
+    }
   } catch (err) {
     console.error(chalk.red('[ERROR] Failed to save results:', err.message));
   }
@@ -34,127 +54,93 @@ async function saveResults(results) {
 
 // Load modules
 const proxySupport = require('./modules/proxy_support');
+const smartBrute = require('./modules/smart_brute');
+const passwordGenerator = require('./modules/password_generator');
+const rateLimitChecker = require('./modules/rate_limit_checker');
 const wordlistOptimizer = require('./modules/wordlist_optimizer');
 const apiFuzzer = require('./modules/api_fuzzer');
 
-// Smart Brute module
-async function smartBrute(config) {
-  const { targetUrl, usernames, passwords, delayMs, maxAttempts, useProxy } = config.smartBrute;
-  const results = [];
-  let attempts = 0;
+// Main menu with hacker theme
+async function showMenu(config) {
+  console.clear();
+  console.log(chalk.green.bold('┌───[ NexusBrute v1.0 - Cyber Vault ]───'));
+  await typeEffect(chalk.cyan('> System Booted. Ready for Action.'));
+  console.log(chalk.green('└───────────────────────────────┘'));
+  console.log(chalk.magenta('Select Module:'));
+  console.log(chalk.yellow('  [1] Smart Brute - Test login endpoints'));
+  console.log(chalk.yellow('  [2] Password Generator - Create secure passwords'));
+  console.log(chalk.yellow('  [3] Rate Limit Checker - Probe API limits'));
+  console.log(chalk.yellow('  [4] Wordlist Optimizer - Streamline password lists'));
+  console.log(chalk.yellow('  [5] API Fuzzer - Hunt for API vulnerabilities'));
+  console.log(chalk.yellow('  [6] Exit - Terminate NexusBrute'));
+  console.log(chalk.green('┌───────────────────────────────┐'));
 
-  const axiosInstance = useProxy ? proxySupport.createProxyAxios(config.proxy) : axios;
+  const response = await prompts({
+    type: 'select',
+    name: 'module',
+    message: chalk.green('> Enter choice [1-6]:'),
+    choices: [
+      { title: 'Smart Brute', value: 'smart_brute' },
+      { title: 'Password Generator', value: 'password_gen' },
+      { title: 'Rate Limit Checker', value: 'rate_limit' },
+      { title: 'Wordlist Optimizer', value: 'wordlist_optimizer' },
+      { title: 'API Fuzzer', value: 'api_fuzzer' },
+      { title: 'Exit', value: 'exit' }
+    ]
+  });
 
-  for (const username of usernames) {
-    for (const password of passwords) {
-      if (attempts >= maxAttempts) break;
-      try {
-        const response = await axiosInstance.post(targetUrl, { username, password }, { timeout: 5000 });
-        results.push({
-          operation: 'smart_brute',
-          target: `${username}:${password}`,
-          result: response.status === 200 ? 'Success' : 'Failed',
-          timestamp: new Date().toISOString(),
-          error: ''
-        });
-        console.log(chalk.cyan(`[ATTEMPT] ${username}:${password} -> ${response.status}`));
-      } catch (err) {
-        results.push({
-          operation: 'smart_brute',
-          target: `${username}:${password}`,
-          result: 'Failed',
-          timestamp: new Date().toISOString(),
-          error: err.message
-        });
-        console.error(chalk.red(`[ERROR] ${username}:${password} -> ${err.message}`));
-      }
-      await new Promise(resolve => setTimeout(resolve, delayMs));
-      attempts++;
-    }
-  }
-  await saveResults(results);
-}
+  console.log(chalk.green('└───────────────────────────────┘'));
 
-// Password Generator module
-function passwordGenerator(config) {
-  const { length, count, useSpecialChars } = config.passwordGenerator;
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' + (useSpecialChars ? '!@#$%^&*' : '');
-  const results = [];
-
-  for (let i = 0; i < count; i++) {
-    let password = '';
-    for (let j = 0; j < length; j++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    results.push({
-      operation: 'password_gen',
-      target: 'generated_password',
-      result: password,
-      timestamp: new Date().toISOString(),
-      error: ''
-    });
-  }
-  saveResults(results);
-  console.log(chalk.green(`[SUCCESS] Generated ${count} passwords`));
-}
-
-// Rate Limit Checker module
-async function rateLimitChecker(config) {
-  const { targetUrl, maxRequests, intervalMs, useProxy } = config.rateLimitChecker;
-  const results = [];
-  let blocked = false;
-
-  const axiosInstance = useProxy ? proxySupport.createProxyAxios(config.proxy) : axios;
-
-  for (let i = 0; i < maxRequests; i++) {
-    try {
-      const response = await axiosInstance.get(targetUrl, { timeout: 5000 });
-      results.push({
-        operation: 'rate_limit',
-        target: targetUrl,
-        result: `Request ${i + 1}: ${response.status}`,
-        timestamp: new Date().toISOString(),
-        error: ''
-      });
-      console.log(chalk.cyan(`[ATTEMPT ${i + 1}] Status: ${response.status}`));
-    } catch (err) {
-      blocked = true;
-      results.push({
-        operation: 'rate_limit',
-        target: targetUrl,
-        result: `Request ${i + 1}: Failed`,
-        timestamp: new Date().toISOString(),
-        error: err.message
-      });
-      console.error(chalk.red(`[ERROR] Request ${i + 1}: ${err.message}`));
+  let results = [];
+  switch (response.module) {
+    case 'smart_brute':
+      console.log(chalk.cyan('[INFO] Engaging Smart Brute...'));
+      results = await smartBrute.brute(config);
       break;
-    }
-    await new Promise(resolve => setTimeout(resolve, intervalMs));
+    case 'password_gen':
+      console.log(chalk.cyan('[INFO] Engaging Password Generator...'));
+      results = await passwordGenerator.generate(config);
+      break;
+    case 'rate_limit':
+      console.log(chalk.cyan('[INFO] Engaging Rate Limit Checker...'));
+      results = await rateLimitChecker.check(config);
+      break;
+    case 'wordlist_optimizer':
+      console.log(chalk.cyan('[INFO] Engaging Wordlist Optimizer...'));
+      results = await wordlistOptimizer.optimize(config);
+      break;
+    case 'api_fuzzer':
+      console.log(chalk.cyan('[INFO] Engaging API Fuzzer...'));
+      results = await apiFuzzer.fuzz(config);
+      break;
+    case 'exit':
+      console.log(chalk.red('[EXIT] NexusBrute Shutting Down. Stay Secure!'));
+      process.exit(0);
+    default:
+      console.log(chalk.red('[ERROR] Invalid choice. Restarting...'));
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return showMenu(config);
   }
-  console.log(chalk.yellow(blocked ? '[INFO] Rate limit detected!' : '[INFO] No rate limit detected.'));
-  await saveResults(results);
-}
 
-// Wordlist Optimizer module
-async function wordlistOptimizerFn(config) {
-  await wordlistOptimizer.optimize(config);
-}
+  // Ask for output type
+  const outputResponse = await prompts({
+    type: 'select',
+    name: 'output',
+    message: chalk.green('> Select output format:'),
+    choices: [
+      { title: 'JSON', value: 'json' },
+      { title: 'CSV', value: 'csv' },
+      { title: 'Both', value: 'both' }
+    ]
+  });
 
-// API Fuzzer module
-async function apiFuzzerFn(config) {
-  await apiFuzzer.fuzz(config);
+  await saveResults(results, outputResponse.output);
 }
 
 // Main function
 async function main() {
   const config = await loadConfig();
-  console.log(chalk.green('[NexusBrute] Initialized with config:', JSON.stringify(config, null, 2)));
-
-  await wordlistOptimizerFn(config);
-  await apiFuzzerFn(config);
-  await smartBrute(config);
-  await passwordGenerator(config);
-  await rateLimitChecker(config);
+  await showMenu(config);
 }
 
 main().catch(err => console.error(chalk.red('[FATAL] NexusBrute crashed:', err.message)));
