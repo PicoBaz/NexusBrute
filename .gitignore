@@ -3,3 +3,4 @@ brute_results.json
 brute_results.csv
 .idea
 package-lock.json
+session.log
