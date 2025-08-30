@@ -1,6 +1,6 @@
 const axios = require('axios');
 const chalk = require('chalk');
-const proxySupport = require('./proxy_support');
+const { ProxyRotator } = require('./proxy_rotator');
 const sessionLogger = require('./session_logger');
 
 async function fuzz(config, sessionLog) {
@@ -8,16 +8,20 @@ async function fuzz(config, sessionLog) {
     const results = [];
     let attempts = 0;
 
+    const proxyRotator = useProxy ? new ProxyRotator(config.proxies) : null;
+    let axiosInstance = axios;
+
     sessionLog.push(await sessionLogger.log(config, {
         operation: 'api_fuzzer_start',
         details: `Fuzzing ${targetUrl} with ${methods.length} methods and ${payloads.length} payloads`
     }));
 
-    const axiosInstance = useProxy ? proxySupport.createProxyAxios(config.proxy) : axios;
-
     for (const method of methods) {
         for (const payload of payloads) {
             if (attempts >= maxAttempts) break;
+            if (useProxy) {
+                axiosInstance = await proxyRotator.createAxiosWithRotation(config, sessionLog);
+            }
             sessionLog.push(await sessionLogger.log(config, {
                 operation: 'api_fuzzer_attempt',
                 details: `Testing ${method} ${targetUrl}?test=${payload}`
@@ -55,6 +59,9 @@ async function fuzz(config, sessionLog) {
                     operation: 'api_fuzzer_error',
                     details: `Error: ${err.message}`
                 }));
+                if (useProxy && err.code === 'ECONNREFUSED') {
+                    proxyRotator.markProxyFailed(axiosInstance.defaults.proxy);
+                }
             }
             await new Promise(resolve => setTimeout(resolve, delayMs));
             attempts++;
