@@ -53,6 +53,7 @@ async function saveResults(results, outputType) {
 }
 
 // Load modules
+const proxyRotator = require('./modules/proxy_rotator');
 const smartBrute = require('./modules/smart_brute');
 const passwordGenerator = require('./modules/password_generator');
 const rateLimitChecker = require('./modules/rate_limit_checker');
@@ -63,8 +64,8 @@ const sessionLogger = require('./modules/session_logger');
 // Main menu
 async function showMenu(config) {
   console.clear();
-  console.log(chalk.green.bold('┌───[ NexusBrute v1.0 - Cyber Vault ]───'));
-  await typeEffect(chalk.cyan('> System Booted. Ready for Action.'));
+  console.log(chalk.green.bold('┌───[ NexusBrute v1.0.0 - Cyber Vault ]───'));
+  await typeEffect(chalk.cyan('> System Booted. Proxy Rotator Engaged. Ready for Action.'));
   console.log(chalk.green('└───────────────────────────────┘'));
   console.log(chalk.magenta('Select Module:'));
   console.log(chalk.yellow('  [1] Smart Brute - Test login endpoints'));
@@ -168,7 +169,7 @@ async function showMenu(config) {
 // Main function
 async function main() {
   const config = await loadConfig();
-  await sessionLogger.log(config, { operation: 'init', details: 'NexusBrute initialized' });
+  await sessionLogger.log(config, { operation: 'init', details: 'NexusBrute initialized with Proxy Rotator' });
   await showMenu(config);
 }
 
