@@ -18,11 +18,11 @@
     "intervalMs": 500,
     "useProxy": true
   },
-  "proxy": {
-    "host": "proxy.example.com",
-    "port": 8080,
-    "protocol": "http"
-  },
+  "proxies": [
+    { "host": "proxy1.example.com", "port": 8080, "protocol": "http" },
+    { "host": "proxy2.example.com", "port": 8080, "protocol": "http" },
+    { "host": "proxy3.example.com", "port": 8080, "protocol": "http" }
+  ],
   "wordlistOptimizer": {
     "inputFile": "wordlist.txt",
     "outputFile": "optimized_wordlist.txt",
