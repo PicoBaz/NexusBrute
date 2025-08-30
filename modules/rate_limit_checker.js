@@ -1,6 +1,6 @@
 const axios = require('axios');
 const chalk = require('chalk');
-const proxySupport = require('./proxy_support');
+const { ProxyRotator } = require('./proxy_rotator');
 const sessionLogger = require('./session_logger');
 
 async function check(config, sessionLog) {
@@ -8,14 +8,18 @@ async function check(config, sessionLog) {
     const results = [];
     let blocked = false;
 
+    const proxyRotator = useProxy ? new ProxyRotator(config.proxies) : null;
+    let axiosInstance = axios;
+
     sessionLog.push(await sessionLogger.log(config, {
         operation: 'rate_limit_start',
         details: `Probing ${targetUrl} with ${maxRequests} requests`
     }));
 
-    const axiosInstance = useProxy ? proxySupport.createProxyAxios(config.proxy) : axios;
-
     for (let i = 0; i < maxRequests; i++) {
+        if (useProxy) {
+            axiosInstance = await proxyRotator.createAxiosWithRotation(config, sessionLog);
+        }
         try {
             const response = await axiosInstance.get(targetUrl, { timeout: 5000 });
             results.push({
@@ -44,6 +48,9 @@ async function check(config, sessionLog) {
                 operation: 'rate_limit_error',
                 details: `Request ${i + 1}: Error ${err.message}`
             }));
+            if (useProxy && err.code === 'ECONNREFUSED') {
+                proxyRotator.markProxyFailed(axiosInstance.defaults.proxy);
+            }
             break;
         }
         await new Promise(resolve => setTimeout(resolve, intervalMs));
