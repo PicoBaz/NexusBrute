@@ -1,19 +1,34 @@
 const axios = require('axios');
 const chalk = require('chalk');
+const fs = require('fs').promises;
 const { ProxyRotator } = require('./proxy_rotator');
 const sessionLogger = require('./session_logger');
 
 async function test(config, sessionLog) {
-    const { targetUrl, payloads, fields, maxAttempts, delayMs, useProxy } = config.sqlInjection;
+    const { targetUrl, payloadFile, fields, maxAttempts, delayMs, useProxy } = config.sqlInjection;
     const results = [];
     let attempts = 0;
+
+    // Load payloads from file
+    let payloads = [];
+    try {
+        const payloadData = await fs.readFile(payloadFile);
+        payloads = JSON.parse(payloadData);
+    } catch (err) {
+        console.error(chalk.red(`[ERROR] Failed to load payloads from ${payloadFile}: ${err.message}`));
+        sessionLog.push(await sessionLogger.log(config, {
+            operation: 'sql_injection_error',
+            details: `Failed to load payloads: ${err.message}`
+        }));
+        return results;
+    }
 
     const proxyRotator = useProxy ? new ProxyRotator(config.proxies) : null;
     let axiosInstance = axios;
 
     sessionLog.push(await sessionLogger.log(config, {
         operation: 'sql_injection_start',
-        details: `Testing ${targetUrl} with ${payloads.length} payloads`
+        details: `Testing ${targetUrl} with ${payloads.length} payloads from ${payloadFile}`
     }));
 
     for (const payload of payloads) {

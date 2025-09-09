@@ -38,6 +38,14 @@
     "delayMs": 500,
     "useProxy": true
   },
+  "sqlInjection": {
+    "targetUrl": "https://example.com/login",
+    "payloadFile": "payloads/sql_payloads.json",
+    "fields": ["username", "password"],
+    "maxAttempts": 20,
+    "delayMs": 500,
+    "useProxy": true
+  },
   "sessionLogger": {
     "logFile": "session.log"
   }
