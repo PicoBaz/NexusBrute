@@ -11,6 +11,7 @@ NexusBrute is designed for security professionals to perform controlled brute-fo
 - **Proxy Rotator**: Dynamic proxy switching for stealthy requests.
 - **Wordlist Optimizer**: Streamlines password lists by removing duplicates and sorting.
 - **API Fuzzer**: Tests APIs with varied inputs to uncover vulnerabilities.
+- **SQL Injection**: Tests forms for SQL injection vulnerabilities with pre-defined payloads.
 - **Output**: Exports results in JSON and CSV formats.
 - **Compliance**: Engineered for ethical, legal testing.
 
@@ -36,6 +37,7 @@ Customize `config.json`:
 - `proxies`: List of proxies (`host`, `port`, `protocol`), e.g., `[{ "host": "proxy1.example.com", "port": 8080, "protocol": "http" }, ...]`.
 - `wordlistOptimizer`: Input/output wordlist files, min length, remove duplicates, sort by length.
 - `apiFuzzer`: Target URL, HTTP methods, payloads, max attempts, delay, `useProxy` (true/false).
+- `sqlInjection`: Target URL, payload file (`payloadFile`, e.g., `sql_payloads.json`), fields to test, max attempts, delay, `useProxy` (true/false).
 - `sessionLogger`: Log file path, e.g., `{ "logFile": "session.log" }`.
 
 
