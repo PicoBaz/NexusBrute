@@ -1,6 +1,6 @@
 {
   "name": "nexusbrute",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "A Node.js tool for ethical brute-force testing with smart features.",
   "main": "index.js",
   "scripts": {
