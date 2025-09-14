@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.3.0] - 2025-09-14
+- Added **DDoS Tester** module for controlled distributed stress testing with proxy rotation.
+- Updated `index.js` to include DDoS Tester in the CLI menu.
+- Added `ddosTester` configuration in `config.json` for request count, concurrency, and rate.
+- Strengthened legal warnings in `README.md` and CLI for DDoS Tester.
+- Bumped version to `1.3.0` in `package.json` and `README.md`.
+
+## [v1.2.1] - 2025-09-09
+- Separated SQL Injection payloads into `payloads/sql_payloads.json` for better modularity.
+- Updated `sql_injection.js` to load payloads from `sql_payloads.json`.
+- Updated `config.json` to reference `sql_payloads.json` via `payloadFile`.
+- Bumped version to `1.2.1` in `package.json` and `README.md`.
+
 ## [v1.2.0] - 2025-09-09
 - Added **SQL Injection** module for testing forms with SQLi payloads.
 - Updated `index.js` to include SQL Injection in the CLI menu.

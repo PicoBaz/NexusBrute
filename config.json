@@ -46,6 +46,15 @@
     "delayMs": 500,
     "useProxy": true
   },
+  "ddosTester": {
+    "targetUrl": "https://example.com/api",
+    "requestCount": 100,
+    "concurrentRequests": 5,
+    "requestsPerSecond": 10,
+    "method": "GET",
+    "payload": {},
+    "useProxy": true
+  },
   "sessionLogger": {
     "logFile": "session.log"
   }

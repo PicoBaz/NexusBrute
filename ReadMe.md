@@ -38,17 +38,13 @@ Customize `config.json`:
 - `wordlistOptimizer`: Input/output wordlist files, min length, remove duplicates, sort by length.
 - `apiFuzzer`: Target URL, HTTP methods, payloads, max attempts, delay, `useProxy` (true/false).
 - `sqlInjection`: Target URL, payload file (`payloadFile`, e.g., `sql_payloads.json`), fields to test, max attempts, delay, `useProxy` (true/false).
+- `ddosTester`: Target URL, request count, concurrent requests, requests per second, method (GET/POST), payload, `useProxy` (true/false).
 - `sessionLogger`: Log file path, e.g., `{ "logFile": "session.log" }`.
 
+Edit `payloads/sql_payloads.json` to customize SQL injection payloads.
 
-## ╾─ Sample Output
-**brute_results.csv**:
-```
-Operation,Target,Result,Timestamp,Error
-smart_brute,admin:password123,Failed,2025-08-27T15:59:00Z,Unauthorized
-password_gen,generated_password,Zq$9xP#2mWn5,2025-08-27T15:59:01Z,
-rate_limit,https://example.com/api,Request 1: 200,2025-08-27T15:59:02Z,
-```
+## ╾─ Usage
+Run `node index.js` to launch the interactive CLI. Select a module and choose output format (JSON, CSV, or both).
 
 ## ╾─ Important Notice
 Use NexusBrute only on systems with explicit permission. Unauthorized use is prohibited and illegal.

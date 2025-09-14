@@ -60,14 +60,15 @@ const rateLimitChecker = require('./modules/rate_limit_checker');
 const wordlistOptimizer = require('./modules/wordlist_optimizer');
 const apiFuzzer = require('./modules/api_fuzzer');
 const sqlInjection = require('./modules/sql_injection');
+const ddosTester = require('./modules/ddos_tester');
 const sessionLogger = require('./modules/session_logger');
 
 // Main menu with hacker theme
 async function showMenu(config) {
   console.clear();
-  console.log(chalk.green.bold('┌───[ NexusBrute v1.2.0 - Cyber Vault ]───'));
-  await typeEffect(chalk.cyan('> System Booted. Proxy Rotator & SQL Injector Engaged. Ready for Action.'));
-  console.log(chalk.red('[WARNING] Use only with explicit permission. Unauthorized use is illegal!'));
+  console.log(chalk.green.bold('┌───[ NexusBrute v1.3.0 - Cyber Vault ]───'));
+  await typeEffect(chalk.cyan('> System Booted. Proxy Rotator, SQL Injector & DDoS Tester Engaged. Ready for Action.'));
+  console.log(chalk.red('[WARNING] Use only with EXPLICIT permission. Unauthorized use is ILLEGAL and may lead to severe consequences!'));
   console.log(chalk.green('└───────────────────────────────┘'));
   console.log(chalk.magenta('Select Module:'));
   console.log(chalk.yellow('  [1] Smart Brute - Test login endpoints'));
@@ -76,13 +77,14 @@ async function showMenu(config) {
   console.log(chalk.yellow('  [4] Wordlist Optimizer - Streamline password lists'));
   console.log(chalk.yellow('  [5] API Fuzzer - Hunt for API vulnerabilities'));
   console.log(chalk.yellow('  [6] SQL Injection - Test for SQLi vulnerabilities'));
-  console.log(chalk.yellow('  [7] Exit - Terminate NexusBrute'));
+  console.log(chalk.yellow('  [7] DDoS Tester - Simulate controlled distributed stress tests'));
+  console.log(chalk.yellow('  [8] Exit - Terminate NexusBrute'));
   console.log(chalk.green('┌───────────────────────────────┐'));
 
   const response = await prompts({
     type: 'select',
     name: 'module',
-    message: chalk.green('> Enter choice [1-7]:'),
+    message: chalk.green('> Enter choice [1-8]:'),
     choices: [
       { title: 'Smart Brute', value: 'smart_brute' },
       { title: 'Password Generator', value: 'password_gen' },
@@ -90,6 +92,7 @@ async function showMenu(config) {
       { title: 'Wordlist Optimizer', value: 'wordlist_optimizer' },
       { title: 'API Fuzzer', value: 'api_fuzzer' },
       { title: 'SQL Injection', value: 'sql_injection' },
+      { title: 'DDoS Tester', value: 'ddos_tester' },
       { title: 'Exit', value: 'exit' }
     ]
   });
@@ -124,6 +127,10 @@ async function showMenu(config) {
     case 'sql_injection':
       console.log(chalk.cyan('[INFO] Engaging SQL Injection...'));
       results = await sqlInjection.test(config, sessionLog);
+      break;
+    case 'ddos_tester':
+      console.log(chalk.cyan('[INFO] Engaging DDoS Tester...'));
+      results = await ddosTester.test(config, sessionLog);
       break;
     case 'exit':
       console.log(chalk.red('[EXIT] NexusBrute Shutting Down. Stay Secure!'));
@@ -176,7 +183,7 @@ async function showMenu(config) {
 // Main function
 async function main() {
   const config = await loadConfig();
-  await sessionLogger.log(config, { operation: 'init', details: 'NexusBrute initialized with Proxy Rotator & SQL Injection' });
+  await sessionLogger.log(config, { operation: 'init', details: 'NexusBrute initialized with Proxy Rotator, SQL Injection & DDoS Tester' });
   await showMenu(config);
 }
 
