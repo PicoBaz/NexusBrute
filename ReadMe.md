@@ -1,5 +1,5 @@
 
-# ╭─── NexusBrute v1.0 ───╮
+# ╭─── NexusBrute v1.3 ───╮
 
 **A Node.js tool for ethical security testing.**  
 NexusBrute is designed for security professionals to perform controlled brute-force tests, generate secure passwords, and analyze API rate limits. Built for precision and compliance, it ensures safe and authorized use.
