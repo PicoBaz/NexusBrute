@@ -1,193 +1,189 @@
-const fs = require('fs').promises;
+const readline = require('readline');
 const chalk = require('chalk');
-const prompts = require('prompts');
+const fs = require('fs');
 
-const CONFIG_FILE = 'config.json';
-const RESULTS_JSON = 'brute_results.json';
-const RESULTS_CSV = 'brute_results.csv';
+// Import modules
+const SmartBrute = require('./modules/smartBrute');
+const PasswordGenerator = require('./modules/passwordGenerator');
+const RateLimitChecker = require('./modules/rateLimitChecker');
+const WordlistOptimizer = require('./modules/wordlistOptimizer');
+const APIFuzzer = require('./modules/apiFuzzer');
+const SQLInjection = require('./modules/sqlInjection');
+const DDOSTester = require('./modules/ddosTester');
+const SessionLogger = require('./modules/sessionLogger');
+const JWTAnalyzer = require('./modules/jwtAnalyzer');
 
-// Load config
-async function loadConfig() {
-  try {
-    const data = await fs.readFile(CONFIG_FILE);
-    return JSON.parse(data);
-  } catch (err) {
-    console.error(chalk.red('[ERROR] Failed to load config.json:', err.message));
-    process.exit(1);
-  }
-}
-
-// Type effect for CLI
-function typeEffect(text) {
-  return new Promise(resolve => {
-    let i = 0;
-    const interval = setInterval(() => {
-      process.stdout.write(text[i]);
-      i++;
-      if (i === text.length) {
-        clearInterval(interval);
-        console.log();
-        resolve();
-      }
-    }, 30);
-  });
-}
-
-// Save results based on user choice
-async function saveResults(results, outputType) {
-  try {
-    if (outputType === 'json' || outputType === 'both') {
-      await fs.writeFile(RESULTS_JSON, JSON.stringify(results, null, 2));
-      console.log(chalk.green(`[SUCCESS] Saved JSON to ${RESULTS_JSON}`));
-    }
-    if (outputType === 'csv' || outputType === 'both') {
-      const csv = ['Operation,Target,Result,Timestamp,Error']
-          .concat(results.map(r => `"${r.operation}","${r.target}","${r.result}","${r.timestamp}","${r.error || ''}"`))
-          .join('\n');
-      await fs.writeFile(RESULTS_CSV, csv);
-      console.log(chalk.green(`[SUCCESS] Saved CSV to ${RESULTS_CSV}`));
-    }
-  } catch (err) {
-    console.error(chalk.red('[ERROR] Failed to save results:', err.message));
-  }
-}
-
-// Load modules
-const proxyRotator = require('./modules/proxy_rotator');
-const smartBrute = require('./modules/smart_brute');
-const passwordGenerator = require('./modules/password_generator');
-const rateLimitChecker = require('./modules/rate_limit_checker');
-const wordlistOptimizer = require('./modules/wordlist_optimizer');
-const apiFuzzer = require('./modules/api_fuzzer');
-const sqlInjection = require('./modules/sql_injection');
-const ddosTester = require('./modules/ddos_tester');
-const sessionLogger = require('./modules/session_logger');
-
-// Main menu with hacker theme
-async function showMenu(config) {
-  console.clear();
-  console.log(chalk.green.bold('┌───[ NexusBrute v1.3.0 - Cyber Vault ]───'));
-  await typeEffect(chalk.cyan('> System Booted. Proxy Rotator, SQL Injector & DDoS Tester Engaged. Ready for Action.'));
-  console.log(chalk.red('[WARNING] Use only with EXPLICIT permission. Unauthorized use is ILLEGAL and may lead to severe consequences!'));
-  console.log(chalk.green('└───────────────────────────────┘'));
-  console.log(chalk.magenta('Select Module:'));
-  console.log(chalk.yellow('  [1] Smart Brute - Test login endpoints'));
-  console.log(chalk.yellow('  [2] Password Generator - Create secure passwords'));
-  console.log(chalk.yellow('  [3] Rate Limit Checker - Probe API limits'));
-  console.log(chalk.yellow('  [4] Wordlist Optimizer - Streamline password lists'));
-  console.log(chalk.yellow('  [5] API Fuzzer - Hunt for API vulnerabilities'));
-  console.log(chalk.yellow('  [6] SQL Injection - Test for SQLi vulnerabilities'));
-  console.log(chalk.yellow('  [7] DDoS Tester - Simulate controlled distributed stress tests'));
-  console.log(chalk.yellow('  [8] Exit - Terminate NexusBrute'));
-  console.log(chalk.green('┌───────────────────────────────┐'));
-
-  const response = await prompts({
-    type: 'select',
-    name: 'module',
-    message: chalk.green('> Enter choice [1-8]:'),
-    choices: [
-      { title: 'Smart Brute', value: 'smart_brute' },
-      { title: 'Password Generator', value: 'password_gen' },
-      { title: 'Rate Limit Checker', value: 'rate_limit' },
-      { title: 'Wordlist Optimizer', value: 'wordlist_optimizer' },
-      { title: 'API Fuzzer', value: 'api_fuzzer' },
-      { title: 'SQL Injection', value: 'sql_injection' },
-      { title: 'DDoS Tester', value: 'ddos_tester' },
-      { title: 'Exit', value: 'exit' }
-    ]
-  });
-
-  console.log(chalk.green('└───────────────────────────────┘'));
-
-  let results = [];
-  const sessionLog = [];
-  await sessionLogger.log(config, { operation: 'start', details: `Module selected: ${response.module}` });
-
-  switch (response.module) {
-    case 'smart_brute':
-      console.log(chalk.cyan('[INFO] Engaging Smart Brute...'));
-      results = await smartBrute.brute(config, sessionLog);
-      break;
-    case 'password_gen':
-      console.log(chalk.cyan('[INFO] Engaging Password Generator...'));
-      results = await passwordGenerator.generate(config, sessionLog);
-      break;
-    case 'rate_limit':
-      console.log(chalk.cyan('[INFO] Engaging Rate Limit Checker...'));
-      results = await rateLimitChecker.check(config, sessionLog);
-      break;
-    case 'wordlist_optimizer':
-      console.log(chalk.cyan('[INFO] Engaging Wordlist Optimizer...'));
-      results = await wordlistOptimizer.optimize(config, sessionLog);
-      break;
-    case 'api_fuzzer':
-      console.log(chalk.cyan('[INFO] Engaging API Fuzzer...'));
-      results = await apiFuzzer.fuzz(config, sessionLog);
-      break;
-    case 'sql_injection':
-      console.log(chalk.cyan('[INFO] Engaging SQL Injection...'));
-      results = await sqlInjection.test(config, sessionLog);
-      break;
-    case 'ddos_tester':
-      console.log(chalk.cyan('[INFO] Engaging DDoS Tester...'));
-      results = await ddosTester.test(config, sessionLog);
-      break;
-    case 'exit':
-      console.log(chalk.red('[EXIT] NexusBrute Shutting Down. Stay Secure!'));
-      await sessionLogger.log(config, { operation: 'exit', details: 'NexusBrute terminated' });
-      process.exit(0);
-    default:
-      console.log(chalk.red('[ERROR] Invalid choice. Restarting...'));
-      await sessionLogger.log(config, { operation: 'error', details: 'Invalid module choice' });
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return showMenu(config);
-  }
-
-  // Ask for output type
-  const outputResponse = await prompts({
-    type: 'select',
-    name: 'output',
-    message: chalk.green('> Select output format:'),
-    choices: [
-      { title: 'JSON', value: 'json' },
-      { title: 'CSV', value: 'csv' },
-      { title: 'Both', value: 'both' }
-    ]
-  });
-
-  await sessionLogger.log(config, { operation: 'output', details: `Output format selected: ${outputResponse.output}` });
-  await saveResults(results, outputResponse.output);
-  await sessionLogger.save(config, sessionLog);
-
-  // Ask to continue or exit
-  const continueResponse = await prompts({
-    type: 'select',
-    name: 'continue',
-    message: chalk.green('> Continue or Exit?'),
-    choices: [
-      { title: 'Continue', value: 'continue' },
-      { title: 'Exit', value: 'exit' }
-    ]
-  });
-
-  if (continueResponse.continue === 'continue') {
-    await showMenu(config);
-  } else {
-    console.log(chalk.red('[EXIT] NexusBrute Shutting Down. Stay Secure!'));
-    await sessionLogger.log(config, { operation: 'exit', details: 'NexusBrute terminated' });
-    await sessionLogger.save(config, sessionLog);
-    process.exit(0);
-  }
-}
-
-// Main function
-async function main() {
-  const config = await loadConfig();
-  await sessionLogger.log(config, { operation: 'init', details: 'NexusBrute initialized with Proxy Rotator, SQL Injection & DDoS Tester' });
-  await showMenu(config);
-}
-
-main().catch(async err => {
-  console.error(chalk.red('[FATAL] NexusBrute crashed:', err.message));
-  await sessionLogger.log({ sessionLogger: { logFile: 'session.log' } }, { operation: 'error', details: `Crash: ${err.message}` });
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
 });
+
+let config;
+try {
+  config = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
+} catch (error) {
+  console.log(chalk.red('❌ Error loading config.json'));
+  process.exit(1);
+}
+
+function showMenu() {
+  console.log(chalk.bold.cyan('\n╔════════════════════════════════════════╗'));
+  console.log(chalk.bold.cyan('║       🌌 NexusBrute Toolkit 🌌       ║'));
+  console.log(chalk.bold.cyan('╚════════════════════════════════════════╝\n'));
+
+  console.log(chalk.yellow('📌 Available Modules:\n'));
+  console.log(chalk.white('1. Smart Brute Force'));
+  console.log(chalk.white('2. Password Generator'));
+  console.log(chalk.white('3. Rate Limit Checker'));
+  console.log(chalk.white('4. Wordlist Optimizer'));
+  console.log(chalk.white('5. API Fuzzer'));
+  console.log(chalk.white('6. SQL Injection Tester'));
+  console.log(chalk.white('7. DDoS Tester'));
+  console.log(chalk.white('8. JWT Analyzer 🔐'));
+  console.log(chalk.white('9. Exit\n'));
+}
+
+function askForOutputFormat(callback) {
+  console.log(chalk.yellow('\n📊 Select Output Format:\n'));
+  console.log(chalk.white('1. JSON'));
+  console.log(chalk.white('2. CSV'));
+  console.log(chalk.white('3. Both'));
+  console.log(chalk.white('4. None (Console only)\n'));
+
+  rl.question(chalk.cyan('Enter your choice: '), (choice) => {
+    callback(choice);
+  });
+}
+
+function saveResults(module, results, format) {
+  const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0];
+
+  if (format === '1' || format === '3') {
+    const jsonFile = `results/${module}_${timestamp}.json`;
+    results.exportJSON(jsonFile);
+  }
+
+  if (format === '2' || format === '3') {
+    const csvFile = `results/${module}_${timestamp}.csv`;
+    results.exportCSV(csvFile);
+  }
+
+  if (format === '4') {
+    console.log(chalk.green('\n✅ Results displayed in console only.'));
+  }
+}
+
+async function runModule(choice) {
+  let module, results;
+
+  switch (choice) {
+    case '1':
+      console.log(chalk.green('\n🚀 Starting Smart Brute Force...\n'));
+      module = new SmartBrute(config.smartBrute, config.proxies);
+      results = await module.run();
+      askForOutputFormat((format) => {
+        saveResults('smartbrute', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '2':
+      console.log(chalk.green('\n🔐 Generating Passwords...\n'));
+      module = new PasswordGenerator(config.passwordGenerator);
+      results = module.generate();
+      console.log(chalk.cyan('\n📋 Generated Passwords:'));
+      results.forEach((pwd, i) => console.log(chalk.white(`${i + 1}. ${pwd}`)));
+      showMenu();
+      promptUser();
+      break;
+
+    case '3':
+      console.log(chalk.green('\n⏱️  Checking Rate Limits...\n'));
+      module = new RateLimitChecker(config.rateLimitChecker, config.proxies);
+      results = await module.check();
+      askForOutputFormat((format) => {
+        saveResults('ratelimit', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '4':
+      console.log(chalk.green('\n📝 Optimizing Wordlist...\n'));
+      module = new WordlistOptimizer(config.wordlistOptimizer);
+      results = module.optimize();
+      console.log(chalk.green(`\n✅ Wordlist optimized and saved to ${config.wordlistOptimizer.outputFile}`));
+      showMenu();
+      promptUser();
+      break;
+
+    case '5':
+      console.log(chalk.green('\n🔍 Starting API Fuzzer...\n'));
+      module = new APIFuzzer(config.apiFuzzer, config.proxies);
+      results = await module.fuzz();
+      askForOutputFormat((format) => {
+        saveResults('apifuzzer', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '6':
+      console.log(chalk.green('\n💉 Testing SQL Injection...\n'));
+      module = new SQLInjection(config.sqlInjection, config.proxies);
+      results = await module.test();
+      askForOutputFormat((format) => {
+        saveResults('sqlinjection', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '7':
+      console.log(chalk.green('\n💥 Starting DDoS Test...\n'));
+      module = new DDOSTester(config.ddosTester, config.proxies);
+      results = await module.test();
+      askForOutputFormat((format) => {
+        saveResults('ddos', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '8':
+      console.log(chalk.green('\n🔐 Starting JWT Analyzer...\n'));
+      module = new JWTAnalyzer(config.jwtAnalyzer);
+      results = await module.run();
+      askForOutputFormat((format) => {
+        saveResults('jwtanalyzer', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '9':
+      console.log(chalk.bold.cyan('\n👋 Thanks for using NexusBrute! Stay Ethical! 🌌\n'));
+      rl.close();
+      process.exit(0);
+      break;
+
+    default:
+      console.log(chalk.red('\n❌ Invalid choice. Please try again.'));
+      showMenu();
+      promptUser();
+  }
+}
+
+function promptUser() {
+  rl.question(chalk.cyan('Enter your choice: '), (choice) => {
+    runModule(choice);
+  });
+}
+
+if (!fs.existsSync('results')) {
+  fs.mkdirSync('results');
+}
+
+showMenu();
+promptUser();
