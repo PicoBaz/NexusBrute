@@ -3,25 +3,27 @@
     "targetUrl": "https://example.com/login",
     "usernames": ["admin", "user"],
     "passwords": ["password123", "admin123"],
-    "delayMs": 1000,
-    "maxAttempts": 10,
-    "useProxy": true
+    "delay": 1000,
+    "maxAttempts": 5,
+    "useProxy": false
   },
   "passwordGenerator": {
-    "length": 12,
-    "count": 5,
-    "useSpecialChars": true
+    "length": 16,
+    "count": 10,
+    "includeSpecialChars": true
   },
   "rateLimitChecker": {
-    "targetUrl": "https://example.com/api",
-    "maxRequests": 20,
-    "intervalMs": 500,
-    "useProxy": true
+    "targetUrl": "https://api.example.com/endpoint",
+    "maxRequests": 100,
+    "interval": 60000,
+    "useProxy": false
   },
   "proxies": [
-    { "host": "proxy1.example.com", "port": 8080, "protocol": "http" },
-    { "host": "proxy2.example.com", "port": 8080, "protocol": "http" },
-    { "host": "proxy3.example.com", "port": 8080, "protocol": "http" }
+    {
+      "host": "proxy1.example.com",
+      "port": 8080,
+      "protocol": "http"
+    }
   ],
   "wordlistOptimizer": {
     "inputFile": "wordlist.txt",
@@ -31,31 +33,42 @@
     "sortByLength": true
   },
   "apiFuzzer": {
-    "targetUrl": "https://example.com/api",
+    "targetUrl": "https://api.example.com/endpoint",
     "methods": ["GET", "POST"],
-    "payloads": ["", "null", "<script>", "1=1", "999999999999999"],
-    "maxAttempts": 10,
-    "delayMs": 500,
-    "useProxy": true
+    "payloads": ["test", "admin", "1' OR '1'='1"],
+    "maxAttempts": 50,
+    "delay": 500,
+    "useProxy": false
   },
   "sqlInjection": {
     "targetUrl": "https://example.com/login",
     "payloadFile": "payloads/sql_payloads.json",
     "fields": ["username", "password"],
     "maxAttempts": 20,
-    "delayMs": 500,
-    "useProxy": true
+    "delay": 1000,
+    "useProxy": false
   },
   "ddosTester": {
-    "targetUrl": "https://example.com/api",
-    "requestCount": 100,
-    "concurrentRequests": 5,
-    "requestsPerSecond": 10,
+    "targetUrl": "https://example.com",
+    "requestCount": 1000,
+    "concurrentRequests": 10,
+    "requestsPerSecond": 50,
     "method": "GET",
-    "payload": {},
-    "useProxy": true
+    "payload": "",
+    "useProxy": false
   },
   "sessionLogger": {
     "logFile": "session.log"
+  },
+  "jwtAnalyzer": {
+    "token": "JWT Token",
+    "targetUrl": "https://api.example.com/protected",
+    "wordlistFile": "wordlists/jwt_secrets.txt",
+    "publicKeyFile": "keys/public.pem",
+    "testClaims": {
+      "role": "admin",
+      "isAdmin": true
+    },
+    "useProxy": false
   }
 }
