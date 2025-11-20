@@ -70,5 +70,11 @@
       "isAdmin": true
     },
     "useProxy": false
+  },
+  "headerInjection": {
+    "targetUrl": "https://example.com",
+    "testTypes": ["all"],
+    "delay": 500,
+    "useProxy": false
   }
 }
