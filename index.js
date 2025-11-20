@@ -2,7 +2,6 @@ const readline = require('readline');
 const chalk = require('chalk');
 const fs = require('fs');
 
-// Import modules
 const SmartBrute = require('./modules/smartBrute');
 const PasswordGenerator = require('./modules/passwordGenerator');
 const RateLimitChecker = require('./modules/rateLimitChecker');
@@ -12,6 +11,7 @@ const SQLInjection = require('./modules/sqlInjection');
 const DDOSTester = require('./modules/ddosTester');
 const SessionLogger = require('./modules/sessionLogger');
 const JWTAnalyzer = require('./modules/jwtAnalyzer');
+const HeaderInjection = require('./modules/headerInjection');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -39,8 +39,9 @@ function showMenu() {
   console.log(chalk.white('5. API Fuzzer'));
   console.log(chalk.white('6. SQL Injection Tester'));
   console.log(chalk.white('7. DDoS Tester'));
-  console.log(chalk.white('8. JWT Analyzer 🔐'));
-  console.log(chalk.white('9. Exit\n'));
+  console.log(chalk.white('8. JWT Analyzer'));
+  console.log(chalk.white('9. Header Injection Tester 🔬'));
+  console.log(chalk.white('10. Exit\n'));
 }
 
 function askForOutputFormat(callback) {
@@ -163,6 +164,17 @@ async function runModule(choice) {
       break;
 
     case '9':
+      console.log(chalk.green('\n🔬 Starting Header Injection Tester...\n'));
+      module = new HeaderInjection(config.headerInjection, config.proxies);
+      results = await module.run();
+      askForOutputFormat((format) => {
+        saveResults('headerinjection', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '10':
       console.log(chalk.bold.cyan('\n👋 Thanks for using NexusBrute! Stay Ethical! 🌌\n'));
       rl.close();
       process.exit(0);
