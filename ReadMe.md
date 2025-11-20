@@ -16,7 +16,19 @@ Use NexusBrute only on systems you own or have explicit written permission to te
 
 ## 🚀 Features
 
-### 🔐 **JWT Analyzer** ⭐ NEW!
+### 🔬 **Header Injection Tester** ⭐ NEW!
+Comprehensive HTTP header vulnerability scanner with advanced injection detection:
+- **CRLF Injection Testing**: Detects header splitting and injection vulnerabilities
+- **Host Header Injection**: Tests for Host header manipulation and poisoning
+- **X-Forwarded-For Manipulation**: Identifies IP spoofing and header reflection
+- **Header Value Injection**: Tests multiple headers for XSS, SQLi, and path traversal
+- **Automatic Vulnerability Detection**: Intelligent pattern matching for security issues
+- **Multiple Attack Vectors**: 50+ payload combinations across 4 attack types
+- **Severity Ratings**: CRITICAL/HIGH/MEDIUM/LOW risk classification
+- **Detailed Reporting**: Comprehensive vulnerability reports with POC
+- **Export Support**: JSON and CSV output formats
+
+### 🔐 **JWT Analyzer**
 Advanced JWT (JSON Web Token) security analyzer with multiple attack vectors:
 - **Token Decoding & Analysis**: Parse and decode JWT headers and payloads
 - **Security Vulnerability Detection**: Identifies common JWT security issues
@@ -96,20 +108,13 @@ Enhance anonymity and bypass restrictions:
 ### Setup
 
 ```bash
-# Clone the repository
 git clone https://github.com/PicoBaz/NexusBrute.git
 cd NexusBrute
 
-# Install dependencies
 npm install axios chalk
 
-# Create results directory
 mkdir results
-
-# Create wordlists directory (for JWT analyzer)
 mkdir wordlists
-
-# Create keys directory (optional, for JWT analyzer)
 mkdir keys
 ```
 
@@ -118,6 +123,30 @@ mkdir keys
 ## ⚙️ Configuration
 
 Edit `config.json` to customize module settings:
+
+### Header Injection Configuration
+
+```json
+{
+  "headerInjection": {
+    "targetUrl": "https://example.com",
+    "testTypes": ["all"],
+    "delay": 500,
+    "useProxy": false
+  }
+}
+```
+
+**Parameters:**
+- `targetUrl`: Target URL to test (required)
+- `testTypes`: Array of test types to run (required)
+    - `"all"`: Run all tests
+    - `"crlf"`: CRLF injection only
+    - `"host"`: Host header injection only
+    - `"xff"`: X-Forwarded-For manipulation only
+    - `"value"`: Header value injection only
+- `delay`: Delay between requests in milliseconds (default: 500)
+- `useProxy`: Enable proxy rotation (default: false)
 
 ### JWT Analyzer Configuration
 
@@ -136,14 +165,6 @@ Edit `config.json` to customize module settings:
   }
 }
 ```
-
-**Parameters:**
-- `token`: JWT token to analyze (required)
-- `targetUrl`: Protected endpoint to test attacks against (optional)
-- `wordlistFile`: Path to wordlist for secret bruteforcing (optional)
-- `publicKeyFile`: Path to public key for key confusion attack (optional)
-- `testClaims`: Custom claims to test manipulation (optional)
-- `useProxy`: Enable proxy rotation (default: false)
 
 ### Smart Brute Configuration
 
@@ -194,11 +215,6 @@ Edit `config.json` to customize module settings:
       "host": "proxy1.example.com",
       "port": 8080,
       "protocol": "http"
-    },
-    {
-      "host": "proxy2.example.com",
-      "port": 3128,
-      "protocol": "https"
     }
   ]
 }
@@ -217,16 +233,6 @@ Edit `config.json` to customize module settings:
     "useProxy": false
   }
 }
-```
-
-**SQL Payload File** (`payloads/sql_payloads.json`):
-```json
-[
-  "' OR '1'='1",
-  "admin' --",
-  "' OR 1=1--",
-  "1' UNION SELECT NULL--"
-]
 ```
 
 ---
@@ -257,25 +263,31 @@ You'll see the main menu:
 5. API Fuzzer
 6. SQL Injection Tester
 7. DDoS Tester
-8. JWT Analyzer 🔐
-9. Exit
+8. JWT Analyzer
+9. Header Injection Tester 🔬
+10. Exit
 ```
 
-### JWT Analyzer Example
+### Header Injection Tester Example
 
-1. **Prepare your JWT token** in `config.json`
-2. **Create a wordlist** at `wordlists/jwt_secrets.txt`:
+1. **Configure your target** in `config.json`:
+```json
+{
+  "headerInjection": {
+    "targetUrl": "https://example.com/api",
+    "testTypes": ["all"],
+    "delay": 500,
+    "useProxy": false
+  }
+}
 ```
-secret
-password
-jwt_secret
-your-256-bit-secret
-```
-3. **Run the analyzer**:
+
+2. **Run the tester**:
 ```bash
 node index.js
-# Select option 8
 ```
+
+3. **Select option 9**
 
 ### Output Options
 
@@ -289,93 +301,104 @@ After each module completes, you can export results in:
 
 ## 📊 Output Examples
 
-### JWT Analyzer Output
+### Header Injection Tester Output
 
 **Console Output:**
 ```
-🔐 JWT Analyzer Started
+🔬 Header Injection Tester Started
+================================================================
+Target: https://example.com/api
+Delay: 500ms
 ================================================================
 
-📋 Step 1: Parsing JWT Token...
-✅ Token parsed successfully
+🔍 Testing CRLF Injection...
+Testing payload 10/10...
 
-📄 Header:
-{
-  "alg": "HS256",
-  "typ": "JWT"
-}
+✗ VULNERABILITY FOUND!
+Payload: %0d%0aX-Injected: true
+  - CRLF_INJECTION: CRLF characters in payload reflected in response headers
 
-📄 Payload:
-{
-  "sub": "1234567890",
-  "name": "John Doe",
-  "iat": 1516239022,
-  "role": "user"
-}
+✓ No CRLF injection vulnerabilities detected
 
-🔍 Step 2: Security Analysis...
+🔍 Testing Host Header Injection...
+Testing payload 9/9...
 
-⚠️  WARNINGS:
+✗ VULNERABILITY FOUND!
+Host: evil.com
+  Status: 200
 
-1. HMAC Algorithm
-   Using symmetric algorithm - Vulnerable to secret bruteforce
-   Severity: MEDIUM
+🔍 Testing X-Forwarded-For Manipulation...
+Testing payload 11/11...
 
-2. No Expiration
-   Token has no expiration time (exp claim missing)
-   Severity: HIGH
+✗ VULNERABILITY FOUND!
+X-Forwarded-For: 127.0.0.1
+  Reflected in response body
 
-🔍 Testing None Algorithm Attack...
-📝 Manipulated Token (alg: none):
-eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwI...
-Server rejected none algorithm (Good!)
+🔍 Testing Header Value Injection...
+Testing 42/42...
 
-🔍 Bruteforcing JWT Secret...
-Attempts: 500/1000
-✅ SECRET FOUND: "secret"
-Time: 2.34s | Attempts: 156
+✓ No Header Value injection vulnerabilities detected
 
-✅ JWT Analysis Complete!
+📊 Test Summary
 ================================================================
+
+⚠️  Total Vulnerabilities Found: 3
+
+crlfInjection: 1 issues
+hostHeaderInjection: 1 issues
+xffManipulation: 1 issues
+
+Time elapsed: 23.45s
+================================================================
+
+✅ Header Injection Testing Complete!
 ```
 
 **JSON Export:**
 ```json
 {
-  "timestamp": "2025-11-11T10:30:00.000Z",
-  "token": {
-    "header": {
-      "alg": "HS256",
-      "typ": "JWT"
-    },
-    "payload": {
-      "sub": "1234567890",
-      "name": "John Doe",
-      "role": "user"
-    }
-  },
-  "securityAnalysis": {
-    "vulnerabilities": [],
-    "warnings": [
+  "timestamp": "2025-11-20T10:30:00.000Z",
+  "targetUrl": "https://example.com/api",
+  "tests": {
+    "crlfInjection": [
       {
-        "type": "WARNING",
-        "issue": "HMAC Algorithm",
-        "description": "Using symmetric algorithm - Vulnerable to secret bruteforce",
-        "severity": "MEDIUM"
+        "payload": "%0d%0aX-Injected: true",
+        "status": 200,
+        "vulnerabilities": [
+          {
+            "type": "CRLF_INJECTION",
+            "severity": "HIGH",
+            "description": "CRLF characters in payload reflected in response headers"
+          }
+        ]
+      }
+    ],
+    "hostHeaderInjection": [
+      {
+        "payload": "evil.com",
+        "status": 200,
+        "vulnerability": {
+          "type": "HOST_HEADER_INJECTION",
+          "severity": "HIGH",
+          "description": "Malicious host header 'evil.com' was reflected or accepted"
+        }
+      }
+    ],
+    "xffManipulation": [
+      {
+        "payload": "127.0.0.1",
+        "status": 200,
+        "vulnerability": {
+          "type": "XFF_REFLECTION",
+          "severity": "MEDIUM",
+          "description": "X-Forwarded-For value '127.0.0.1' reflected in response"
+        }
       }
     ]
   },
-  "attackResults": {
-    "noneAlgorithm": {
-      "success": false,
-      "message": "Server rejected none algorithm (Good!)"
-    },
-    "bruteforce": {
-      "success": true,
-      "secret": "secret",
-      "attempts": 156,
-      "timeElapsed": "2.34"
-    }
+  "summary": {
+    "totalVulnerabilities": 3,
+    "timeElapsed": "23.45"
   }
 }
 ```
@@ -395,78 +418,86 @@ Time: 2.34s | Attempts: 156
 
 ## 📚 Module Details
 
-### JWT Analyzer Features
+### Header Injection Tester Features
 
-#### 1. Token Parsing & Decoding
-- Decodes Base64URL encoded JWT components
-- Extracts header, payload, and signature
-- Validates JWT structure
+#### 1. CRLF Injection Testing
+- Tests for carriage return and line feed injection
+- Multiple encoding variants (%0d%0a, \r\n, etc.)
+- Detects header splitting vulnerabilities
+- Tests response header reflection
+- Identifies potential for HTTP response splitting
 
-#### 2. Security Vulnerability Detection
-- **None Algorithm**: Detects disabled signature verification
-- **Weak Algorithms**: Identifies HMAC usage (bruteforce vulnerable)
-- **Missing Expiration**: Checks for `exp` claim
-- **Long Expiration**: Warns about tokens valid for over 1 year
-- **Sensitive Data**: Scans payload for passwords, secrets, keys
+#### 2. Host Header Injection
+- Tests Host header manipulation
+- Detects cache poisoning vulnerabilities
+- Identifies password reset poisoning risks
+- Tests for SSRF via Host header
+- Multiple payload variations including subdomain takeover attempts
 
-#### 3. None Algorithm Attack
-- Modifies `alg` header to `none`
-- Removes signature
-- Tests against target endpoint
-- Reports vulnerability if successful
+#### 3. X-Forwarded-For Manipulation
+- Tests IP spoofing capabilities
+- Detects header reflection in responses
+- Tests multiple forwarding headers:
+    - X-Forwarded-For
+    - X-Real-IP
+    - X-Originating-IP
+    - X-Remote-IP
+    - X-Client-IP
+- Identifies potential for access control bypass
 
-#### 4. Secret Bruteforce
-- Supports HS256, HS384, HS512 algorithms
-- Uses custom wordlists
-- Real-time progress tracking
-- Calculates attempts and time elapsed
-
-#### 5. Key Confusion Attack
-- Tests RS256 → HS256 algorithm confusion
-- Uses public key as HMAC secret
-- Generates manipulated token
-- Tests against target endpoint
-
-#### 6. Claims Manipulation
-- Modifies payload claims (e.g., role, permissions)
-- Keeps original signature
-- Tests server-side signature verification
-- Reports if server accepts invalid signature
+#### 4. Header Value Injection
+- Tests multiple common headers:
+    - Referer
+    - User-Agent
+    - Cookie
+    - Origin
+    - Accept-Language
+    - Accept-Encoding
+- Payload types:
+    - XSS (Cross-Site Scripting)
+    - SQL Injection
+    - Path Traversal
+    - Template Injection
+    - Command Injection
 
 ---
 
 ## 🔧 Advanced Usage
 
-### Custom Wordlist for JWT Secrets
+### Custom Test Types
 
-Create `wordlists/jwt_secrets.txt`:
+Run specific test types only:
+
+```json
+{
+  "headerInjection": {
+    "targetUrl": "https://example.com",
+    "testTypes": ["crlf", "host"],
+    "delay": 500
+  }
+}
 ```
-secret
-password
-123456
-admin
-jwt_secret
-my_secret_key
-supersecret
-your-256-bit-secret
-```
 
-### Testing Multiple JWTs
+### Testing Multiple Targets
 
-Modify `config.json` and run multiple times, or create a script:
+Create a script to test multiple targets:
 
 ```javascript
-const JWTAnalyzer = require('./modules/jwtAnalyzer');
+const HeaderInjection = require('./modules/headerInjection');
 
-const tokens = [
-  'eyJhbGci...',
-  'eyJhbGci...',
-  'eyJhbGci...'
+const targets = [
+  'https://example1.com',
+  'https://example2.com',
+  'https://example3.com'
 ];
 
-tokens.forEach(async (token) => {
-  const analyzer = new JWTAnalyzer({ token });
-  await analyzer.run();
+targets.forEach(async (target) => {
+  const tester = new HeaderInjection({ 
+    targetUrl: target,
+    testTypes: ['all'],
+    delay: 500
+  });
+  await tester.run();
 });
 ```
 
@@ -474,19 +505,19 @@ tokens.forEach(async (token) => {
 
 ## 🐛 Troubleshooting
 
-### JWT Analyzer Issues
+### Header Injection Tester Issues
 
-**Problem**: "Invalid JWT format"
-- **Solution**: Ensure token has 3 parts separated by dots (header.payload.signature)
+**Problem**: "Connection timeout"
+- **Solution**: Increase delay or check if target is accessible
 
-**Problem**: "Wordlist file not found"
-- **Solution**: Create `wordlists/jwt_secrets.txt` or update path in config
+**Problem**: "All tests return no vulnerabilities"
+- **Solution**: This is good! It means the target is secure against header injection attacks
 
-**Problem**: "Server rejected token"
-- **Solution**: This is expected if the server has proper security. It means the vulnerability test failed (good for security!)
+**Problem**: "Too many false positives"
+- **Solution**: Review the severity levels and focus on CRITICAL and HIGH findings
 
-**Problem**: "Secret not found in wordlist"
-- **Solution**: Expand your wordlist or the secret is too strong to bruteforce
+**Problem**: "Rate limiting detected"
+- **Solution**: Increase delay between requests or enable proxy rotation
 
 ---
 
@@ -535,7 +566,8 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 ## 📞 Contact & Support
 
 - **GitHub**: [@PicoBaz](https://github.com/PicoBaz)
-- **Telegram**: [@PicoBaz](https://t.me/picobaz)
+- **Email**: picobaz3@gmail.com
+- **Telegram**: [@picobaz](https://t.me/picobaz)
 - **Issues**: [GitHub Issues](https://github.com/PicoBaz/NexusBrute/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/PicoBaz/NexusBrute/discussions)
 
