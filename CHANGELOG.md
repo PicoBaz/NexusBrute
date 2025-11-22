@@ -1,5 +1,71 @@
 # Changelog
 
+All notable changes to NexusBrute will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [2.1.0] - 2025-11-22
+
+### Added
+- **Header Injection Tester Module**: Comprehensive HTTP header vulnerability scanner
+  - CRLF Injection testing with 10+ payload variations
+  - Host Header Injection detection with 9 attack scenarios
+  - X-Forwarded-For manipulation testing across 5 different headers
+  - Header Value Injection testing for 6 common headers with 7 payload types
+  - Automatic vulnerability detection with intelligent pattern matching
+  - Severity classification (CRITICAL/HIGH/MEDIUM/LOW)
+  - Real-time progress tracking during tests
+  - Detailed vulnerability reporting with proof of concept
+  - JSON and CSV export support
+- Contact information in README (Email, Telegram, GitHub)
+- Enhanced module menu with Header Injection Tester option
+
+### Changed
+- Updated `config.json` with `headerInjection` configuration section
+- Updated `index.js` to include Header Injection Tester in main menu
+- Expanded README.md with comprehensive Header Injection Tester documentation
+- Updated module count from 8 to 9 modules
+
+### Security
+- All header injection tests include configurable delays to prevent abuse
+- Proxy rotation support for distributed testing
+- Timeout protection to prevent hanging requests
+
+---
+
+## [2.0.0] - 2025-11-20
+
+### Added
+- **JWT Analyzer Module**: Advanced JWT security testing toolkit
+  - Token parsing and Base64URL decoding
+  - Comprehensive security vulnerability detection
+  - None Algorithm Attack testing
+  - HMAC secret bruteforce with custom wordlists (HS256/HS384/HS512)
+  - Key Confusion Attack (RS256 to HS256)
+  - Claims manipulation testing
+  - Token expiration analysis
+  - Sensitive data detection in payloads
+  - Detailed reporting with severity levels
+  - JSON and CSV export functionality
+- Sample JWT secrets wordlist (`jwt_secrets.txt`)
+- JWT Analyzer configuration in `config.json`
+- Comprehensive JWT testing documentation in README
+
+### Changed
+- Updated main menu to include JWT Analyzer option
+- Enhanced README with JWT Analyzer usage examples
+- Updated configuration structure for new module
+
+### Performance
+- Optimized bruteforce algorithm for 500+ attempts per second
+- Memory-efficient wordlist processing
+
+---
+
+
 ## [v1.3.0] - 2025-09-14
 - Added **DDoS Tester** module for controlled distributed stress testing with proxy rotation.
 - Updated `index.js` to include DDoS Tester in the CLI menu.
