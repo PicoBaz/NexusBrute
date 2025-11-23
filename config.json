@@ -76,5 +76,14 @@
     "testTypes": ["all"],
     "delay": 500,
     "useProxy": false
+  },
+  "websocketTester": {
+    "targetUrl": "wss://example.com/ws",
+    "testTypes": ["all"],
+    "delay": 500,
+    "rateLimitTest": {
+      "maxMessages": 100,
+      "interval": 10
+    }
   }
 }
