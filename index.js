@@ -12,6 +12,7 @@ const DDOSTester = require('./modules/ddosTester');
 const SessionLogger = require('./modules/sessionLogger');
 const JWTAnalyzer = require('./modules/jwtAnalyzer');
 const HeaderInjection = require('./modules/headerInjection');
+const WebSocketTester = require('./modules/websocketTester');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -40,8 +41,9 @@ function showMenu() {
   console.log(chalk.white('6. SQL Injection Tester'));
   console.log(chalk.white('7. DDoS Tester'));
   console.log(chalk.white('8. JWT Analyzer'));
-  console.log(chalk.white('9. Header Injection Tester 🔬'));
-  console.log(chalk.white('10. Exit\n'));
+  console.log(chalk.white('9. Header Injection Tester'));
+  console.log(chalk.white('10. WebSocket Security Tester 🔌'));
+  console.log(chalk.white('11. Exit\n'));
 }
 
 function askForOutputFormat(callback) {
@@ -175,6 +177,17 @@ async function runModule(choice) {
       break;
 
     case '10':
+      console.log(chalk.green('\n🔌 Starting WebSocket Security Tester...\n'));
+      module = new WebSocketTester(config.websocketTester);
+      results = await module.run();
+      askForOutputFormat((format) => {
+        saveResults('websocket', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '11':
       console.log(chalk.bold.cyan('\n👋 Thanks for using NexusBrute! Stay Ethical! 🌌\n'));
       rl.close();
       process.exit(0);
