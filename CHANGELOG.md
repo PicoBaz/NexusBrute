@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.0] - 2025-11-23
+
+### Added
+- **WebSocket Security Tester Module**: Comprehensive WebSocket vulnerability scanner
+  - Connection security testing (ws:// vs wss://)
+  - Origin validation bypass detection with 8 malicious origin scenarios
+  - Message injection testing with 15+ payloads (XSS, SQLi, Path Traversal, Template Injection, NoSQL, Prototype Pollution)
+  - CSRF protection validation with 3 authentication scenarios
+  - Rate limiting analysis with configurable message flooding
+  - Authentication bypass testing with 5 different techniques
+  - Denial of Service testing (large messages up to 10MB, connection flooding)
+  - Real-time message logging and monitoring
+  - Automatic vulnerability detection with severity classification
+  - JSON and CSV export support
+- WebSocket dependency (ws ^8.14.2) added to package.json
+- Enhanced module menu with WebSocket Security Tester option
+
+### Changed
+- Updated `config.json` with `websocketTester` configuration section
+- Updated `index.js` to include WebSocket Security Tester in main menu (option 10)
+- Updated `package.json` to version 2.2.0 with ws dependency
+- Expanded README.md with comprehensive WebSocket Security Tester documentation
+- Updated module count from 9 to 10 modules
+
+### Security
+- WebSocket connection timeout protection (10 second default)
+- Configurable delays to prevent abuse
+- Graceful error handling for connection failures
+- Message size validation testing
+- Automatic connection cleanup and resource management
+
+---
+
 ## [2.1.0] - 2025-11-22
 
 ### Added

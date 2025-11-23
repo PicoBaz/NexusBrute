@@ -16,7 +16,20 @@ Use NexusBrute only on systems you own or have explicit written permission to te
 
 ## 🚀 Features
 
-### 🔬 **Header Injection Tester** ⭐ NEW!
+### 🔌 **WebSocket Security Tester** ⭐ NEW!
+Advanced WebSocket vulnerability scanner with real-time testing capabilities:
+- **Connection Security Testing**: Validates ws:// vs wss:// protocol security
+- **Origin Validation**: Tests for origin bypass and CORS misconfigurations
+- **Message Injection**: 15+ payloads testing XSS, SQLi, path traversal, template injection
+- **CSRF Protection**: Validates WebSocket CSRF protection mechanisms
+- **Rate Limiting Analysis**: Tests message flooding and rate limit enforcement
+- **Authentication Bypass**: 5 authentication bypass techniques
+- **Denial of Service**: Large message and connection flooding tests
+- **Real-time Monitoring**: Live message logging and analysis
+- **Severity Classification**: CRITICAL/HIGH/MEDIUM/LOW risk ratings
+- **Export Support**: JSON and CSV output formats
+
+### 🔬 **Header Injection Tester**
 Comprehensive HTTP header vulnerability scanner with advanced injection detection:
 - **CRLF Injection Testing**: Detects header splitting and injection vulnerabilities
 - **Host Header Injection**: Tests for Host header manipulation and poisoning
@@ -111,7 +124,7 @@ Enhance anonymity and bypass restrictions:
 git clone https://github.com/PicoBaz/NexusBrute.git
 cd NexusBrute
 
-npm install axios chalk
+npm install axios chalk ws
 
 mkdir results
 mkdir wordlists
@@ -123,6 +136,38 @@ mkdir keys
 ## ⚙️ Configuration
 
 Edit `config.json` to customize module settings:
+
+### WebSocket Security Tester Configuration
+
+```json
+{
+  "websocketTester": {
+    "targetUrl": "wss://example.com/ws",
+    "testTypes": ["all"],
+    "delay": 500,
+    "rateLimitTest": {
+      "maxMessages": 100,
+      "interval": 10
+    }
+  }
+}
+```
+
+**Parameters:**
+- `targetUrl`: WebSocket URL to test (required) - supports ws:// and wss://
+- `testTypes`: Array of test types to run (required)
+  - `"all"`: Run all tests (recommended)
+  - `"connection"`: Connection security only
+  - `"origin"`: Origin validation only
+  - `"injection"`: Message injection only
+  - `"csrf"`: CSRF protection only
+  - `"ratelimit"`: Rate limiting only
+  - `"auth"`: Authentication bypass only
+  - `"dos"`: Denial of service only
+- `delay`: Delay between requests in milliseconds (default: 500)
+- `rateLimitTest`: Rate limit testing configuration
+  - `maxMessages`: Maximum messages to send (default: 100)
+  - `interval`: Interval between messages in ms (default: 10)
 
 ### Header Injection Configuration
 
@@ -136,17 +181,6 @@ Edit `config.json` to customize module settings:
   }
 }
 ```
-
-**Parameters:**
-- `targetUrl`: Target URL to test (required)
-- `testTypes`: Array of test types to run (required)
-    - `"all"`: Run all tests
-    - `"crlf"`: CRLF injection only
-    - `"host"`: Host header injection only
-    - `"xff"`: X-Forwarded-For manipulation only
-    - `"value"`: Header value injection only
-- `delay`: Delay between requests in milliseconds (default: 500)
-- `useProxy`: Enable proxy rotation (default: false)
 
 ### JWT Analyzer Configuration
 
@@ -166,74 +200,9 @@ Edit `config.json` to customize module settings:
 }
 ```
 
-### Smart Brute Configuration
+### Other Modules Configuration
 
-```json
-{
-  "smartBrute": {
-    "targetUrl": "https://example.com/login",
-    "usernames": ["admin", "user"],
-    "passwords": ["password123", "admin123"],
-    "delay": 1000,
-    "maxAttempts": 5,
-    "useProxy": false
-  }
-}
-```
-
-### Password Generator Configuration
-
-```json
-{
-  "passwordGenerator": {
-    "length": 16,
-    "count": 10,
-    "includeSpecialChars": true
-  }
-}
-```
-
-### Rate Limit Checker Configuration
-
-```json
-{
-  "rateLimitChecker": {
-    "targetUrl": "https://api.example.com/endpoint",
-    "maxRequests": 100,
-    "interval": 60000,
-    "useProxy": false
-  }
-}
-```
-
-### Proxy Configuration
-
-```json
-{
-  "proxies": [
-    {
-      "host": "proxy1.example.com",
-      "port": 8080,
-      "protocol": "http"
-    }
-  ]
-}
-```
-
-### SQL Injection Configuration
-
-```json
-{
-  "sqlInjection": {
-    "targetUrl": "https://example.com/login",
-    "payloadFile": "payloads/sql_payloads.json",
-    "fields": ["username", "password"],
-    "maxAttempts": 20,
-    "delay": 1000,
-    "useProxy": false
-  }
-}
-```
+See previous documentation sections for Smart Brute, Password Generator, Rate Limit Checker, Wordlist Optimizer, API Fuzzer, SQL Injection, DDoS Tester, and Proxy configurations.
 
 ---
 
@@ -264,20 +233,24 @@ You'll see the main menu:
 6. SQL Injection Tester
 7. DDoS Tester
 8. JWT Analyzer
-9. Header Injection Tester 🔬
-10. Exit
+9. Header Injection Tester
+10. WebSocket Security Tester 🔌
+11. Exit
 ```
 
-### Header Injection Tester Example
+### WebSocket Security Tester Example
 
 1. **Configure your target** in `config.json`:
 ```json
 {
-  "headerInjection": {
-    "targetUrl": "https://example.com/api",
+  "websocketTester": {
+    "targetUrl": "wss://echo.websocket.org",
     "testTypes": ["all"],
     "delay": 500,
-    "useProxy": false
+    "rateLimitTest": {
+      "maxMessages": 50,
+      "interval": 10
+    }
   }
 }
 ```
@@ -287,7 +260,7 @@ You'll see the main menu:
 node index.js
 ```
 
-3. **Select option 9**
+3. **Select option 10**
 
 ### Output Options
 
@@ -301,104 +274,110 @@ After each module completes, you can export results in:
 
 ## 📊 Output Examples
 
-### Header Injection Tester Output
+### WebSocket Security Tester Output
 
 **Console Output:**
 ```
-🔬 Header Injection Tester Started
+🔌 WebSocket Security Tester Started
 ================================================================
-Target: https://example.com/api
+Target: wss://example.com/ws
 Delay: 500ms
 ================================================================
 
-🔍 Testing CRLF Injection...
-Testing payload 10/10...
+🔍 Testing Connection Security...
+Testing wss://...
+✓ wss:// connection successful
+Testing ws://...
+✗ ws:// connection failed
 
-✗ VULNERABILITY FOUND!
-Payload: %0d%0aX-Injected: true
-  - CRLF_INJECTION: CRLF characters in payload reflected in response headers
+🔍 Testing Origin Validation...
+Testing origin 1/8...
+✗ VULNERABILITY: Origin 'http://evil.com' accepted
 
-✓ No CRLF injection vulnerabilities detected
+🔍 Testing Message Injection...
+✓ Connected to WebSocket
+Testing payload 15/15...
+✗ VULNERABILITY: Payload reflected
+Payload: <script>alert("XSS")</script>
 
-🔍 Testing Host Header Injection...
-Testing payload 9/9...
+🔍 Testing CSRF Protection...
+Testing No Authentication...
+✗ VULNERABILITY: No Authentication
 
-✗ VULNERABILITY FOUND!
-Host: evil.com
-  Status: 200
+🔍 Testing Rate Limiting...
+✓ Connected to WebSocket
+Sending message 100/100...
+✗ VULNERABILITY: No rate limiting detected (100+ messages allowed)
 
-🔍 Testing X-Forwarded-For Manipulation...
-Testing payload 11/11...
+🔍 Testing Authentication Bypass...
+Testing No Token...
+✗ VULNERABILITY: No Token bypassed authentication
 
-✗ VULNERABILITY FOUND!
-X-Forwarded-For: 127.0.0.1
-  Reflected in response body
-
-🔍 Testing Header Value Injection...
-Testing 42/42...
-
-✓ No Header Value injection vulnerabilities detected
+🔍 Testing Denial of Service...
+✓ Connected to WebSocket
+Testing large message (10MB)...
+✗ VULNERABILITY: Large message accepted
+Testing connection flooding...
+✗ VULNERABILITY: 10 rapid connections allowed
 
 📊 Test Summary
 ================================================================
 
-⚠️  Total Vulnerabilities Found: 3
+⚠️  Total Vulnerabilities Found: 8
 
-crlfInjection: 1 issues
-hostHeaderInjection: 1 issues
-xffManipulation: 1 issues
+originValidation: 1 vulnerabilities
+messageInjection: 1 vulnerabilities
+csrfProtection: 1 vulnerabilities
+rateLimiting: 1 vulnerabilities
+authenticationBypass: 1 vulnerabilities
+denialOfService: 2 vulnerabilities
 
-Time elapsed: 23.45s
+Time elapsed: 45.67s
 ================================================================
 
-✅ Header Injection Testing Complete!
+✅ WebSocket Security Testing Complete!
 ```
 
 **JSON Export:**
 ```json
 {
-  "timestamp": "2025-11-20T10:30:00.000Z",
-  "targetUrl": "https://example.com/api",
+  "timestamp": "2025-11-23T10:30:00.000Z",
+  "targetUrl": "wss://example.com/ws",
   "tests": {
-    "crlfInjection": [
+    "connectionSecurity": [
       {
-        "payload": "%0d%0aX-Injected: true",
-        "status": 200,
-        "vulnerabilities": [
-          {
-            "type": "CRLF_INJECTION",
-            "severity": "HIGH",
-            "description": "CRLF characters in payload reflected in response headers"
-          }
-        ]
+        "protocol": "wss://",
+        "connected": true,
+        "secure": true,
+        "vulnerability": null
       }
     ],
-    "hostHeaderInjection": [
+    "originValidation": [
       {
-        "payload": "evil.com",
-        "status": 200,
+        "origin": "http://evil.com",
+        "accepted": true,
         "vulnerability": {
-          "type": "HOST_HEADER_INJECTION",
+          "type": "ORIGIN_VALIDATION_BYPASS",
           "severity": "HIGH",
-          "description": "Malicious host header 'evil.com' was reflected or accepted"
+          "description": "Server accepted connection from untrusted origin: http://evil.com"
         }
       }
     ],
-    "xffManipulation": [
+    "messageInjection": [
       {
-        "payload": "127.0.0.1",
-        "status": 200,
+        "payload": "<script>alert(\"XSS\")</script>",
+        "reflected": true,
         "vulnerability": {
-          "type": "XFF_REFLECTION",
-          "severity": "MEDIUM",
-          "description": "X-Forwarded-For value '127.0.0.1' reflected in response"
+          "type": "MESSAGE_INJECTION",
+          "severity": "HIGH",
+          "description": "Payload reflected in WebSocket response without sanitization"
         }
       }
     ]
   },
   "summary": {
-    "totalVulnerabilities": 3,
-    "timeElapsed": "23.45"
+    "totalVulnerabilities": 8,
+    "timeElapsed": "45.67"
   }
 }
 ```
@@ -413,111 +392,135 @@ Time elapsed: 23.45s
 - **Session Logging**: Comprehensive audit trails
 - **Error Handling**: Graceful failure management
 - **Timeout Protection**: Prevents hanging requests
+- **Connection Management**: Automatic cleanup and resource management
 
 ---
 
 ## 📚 Module Details
 
-### Header Injection Tester Features
+### WebSocket Security Tester Features
 
-#### 1. CRLF Injection Testing
-- Tests for carriage return and line feed injection
-- Multiple encoding variants (%0d%0a, \r\n, etc.)
-- Detects header splitting vulnerabilities
-- Tests response header reflection
-- Identifies potential for HTTP response splitting
+#### 1. Connection Security Testing
+- Tests both ws:// (insecure) and wss:// (secure) protocols
+- Identifies unencrypted WebSocket connections
+- Validates SSL/TLS implementation
+- Reports protocol downgrade vulnerabilities
 
-#### 2. Host Header Injection
-- Tests Host header manipulation
-- Detects cache poisoning vulnerabilities
-- Identifies password reset poisoning risks
-- Tests for SSRF via Host header
-- Multiple payload variations including subdomain takeover attempts
+#### 2. Origin Validation
+- Tests 8 different malicious origins:
+  - null origin
+  - External domains (http://evil.com, https://evil.com)
+  - localhost
+  - file:// protocol
+  - Path traversal attempts
+  - XSS payloads in origin header
+- Detects CORS misconfigurations
+- Identifies origin bypass vulnerabilities
 
-#### 3. X-Forwarded-For Manipulation
-- Tests IP spoofing capabilities
-- Detects header reflection in responses
-- Tests multiple forwarding headers:
-    - X-Forwarded-For
-    - X-Real-IP
-    - X-Originating-IP
-    - X-Remote-IP
-    - X-Client-IP
-- Identifies potential for access control bypass
+#### 3. Message Injection
+- 15+ comprehensive payloads:
+  - **XSS**: Multiple variants including DOM-based
+  - **SQL Injection**: Classic and modern techniques
+  - **Path Traversal**: Directory traversal attempts
+  - **Template Injection**: Multiple template engines
+  - **NoSQL Injection**: MongoDB specific payloads
+  - **Prototype Pollution**: JavaScript object manipulation
+  - **Null Byte Injection**: Binary data injection
+- Real-time response analysis
+- Payload reflection detection
+- Sanitization bypass testing
 
-#### 4. Header Value Injection
-- Tests multiple common headers:
-    - Referer
-    - User-Agent
-    - Cookie
-    - Origin
-    - Accept-Language
-    - Accept-Encoding
-- Payload types:
-    - XSS (Cross-Site Scripting)
-    - SQL Injection
-    - Path Traversal
-    - Template Injection
-    - Command Injection
+#### 4. CSRF Protection
+- Tests 3 authentication scenarios:
+  - No authentication headers
+  - Missing CSRF tokens
+  - Invalid CSRF tokens
+- Validates WebSocket-specific CSRF protections
+- Tests sensitive operation execution
+
+#### 5. Rate Limiting
+- Configurable message flooding
+- Measures messages accepted before rate limit
+- Tests burst vs sustained rate limits
+- Identifies DoS vulnerabilities
+
+#### 6. Authentication Bypass
+- 5 bypass techniques:
+  - No token
+  - Invalid token
+  - Expired token
+  - Malformed token
+  - None algorithm JWT
+- Tests authentication enforcement
+- Validates token verification
+
+#### 7. Denial of Service
+- Large message testing (up to 10MB)
+- Connection flooding (multiple rapid connections)
+- Resource exhaustion detection
+- Server stability analysis
 
 ---
 
 ## 🔧 Advanced Usage
 
-### Custom Test Types
+### Custom Test Selection
 
-Run specific test types only:
+Run specific tests only:
 
 ```json
 {
-  "headerInjection": {
-    "targetUrl": "https://example.com",
-    "testTypes": ["crlf", "host"],
-    "delay": 500
+  "websocketTester": {
+    "targetUrl": "wss://example.com/ws",
+    "testTypes": ["injection", "csrf", "auth"],
+    "delay": 1000
   }
 }
 ```
 
-### Testing Multiple Targets
+### Testing Multiple WebSocket Endpoints
 
-Create a script to test multiple targets:
+Create a script:
 
 ```javascript
-const HeaderInjection = require('./modules/headerInjection');
+const WebSocketTester = require('./modules/websocketTester');
 
-const targets = [
-  'https://example1.com',
-  'https://example2.com',
-  'https://example3.com'
+const endpoints = [
+  'wss://api.example.com/ws',
+  'wss://chat.example.com/socket',
+  'wss://notifications.example.com/updates'
 ];
 
-targets.forEach(async (target) => {
-  const tester = new HeaderInjection({ 
-    targetUrl: target,
+for (const endpoint of endpoints) {
+  const tester = new WebSocketTester({
+    targetUrl: endpoint,
     testTypes: ['all'],
     delay: 500
   });
   await tester.run();
-});
+}
 ```
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Header Injection Tester Issues
+### WebSocket Security Tester Issues
 
 **Problem**: "Connection timeout"
-- **Solution**: Increase delay or check if target is accessible
+- **Solution**: Check if WebSocket server is accessible and increase timeout in code if needed
 
-**Problem**: "All tests return no vulnerabilities"
-- **Solution**: This is good! It means the target is secure against header injection attacks
+**Problem**: "WebSocket is not defined"
+- **Solution**: Install ws package: `npm install ws`
+
+**Problem**: "All tests show no vulnerabilities"
+- **Solution**: Great! This means the WebSocket implementation is secure
+
+**Problem**: "Connection refused"
+- **Solution**: Verify the WebSocket URL is correct and server is running
 
 **Problem**: "Too many false positives"
-- **Solution**: Review the severity levels and focus on CRITICAL and HIGH findings
-
-**Problem**: "Rate limiting detected"
-- **Solution**: Increase delay between requests or enable proxy rotation
+- **Solution**: Focus on CRITICAL and HIGH severity findings, review test configuration
 
 ---
 
@@ -530,6 +533,7 @@ targets.forEach(async (target) => {
 5. **Responsible Disclosure**: Report vulnerabilities responsibly
 6. **Stay Updated**: Keep NexusBrute and dependencies up to date
 7. **Backup Data**: Ensure targets have backups before destructive tests
+8. **WebSocket Specifics**: Be aware that WebSocket connections are persistent and stateful
 
 ---
 
@@ -559,6 +563,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 - Built with [Node.js](https://nodejs.org/)
 - Styled with [Chalk](https://github.com/chalk/chalk)
 - HTTP requests via [Axios](https://axios-http.com/)
+- WebSocket support via [ws](https://github.com/websockets/ws)
 - Inspired by the security research community
 
 ---
