@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.3.0] - 2025-11-24
+
+### Added
+- **Subdomain Enumerator Module**: Comprehensive subdomain discovery and analysis toolkit
+  - DNS bruteforce with custom wordlists (200+ common subdomains included)
+  - Certificate Transparency log querying via crt.sh
+  - Permutation scanning for discovered subdomains
+  - Wildcard DNS detection
+  - DNS Zone Transfer testing
+  - HTTP/HTTPS accessibility checks
+  - CNAME record analysis
+  - MX and TXT record enumeration
+  - Subdomain takeover vulnerability detection (10+ services)
+  - Real-time progress tracking
+  - Automatic vulnerability classification
+  - JSON and CSV export support
+- Comprehensive subdomain wordlist with 200+ entries
+- Enhanced module menu with Subdomain Enumerator option
+
+### Changed
+- Updated `config.json` with `subdomainEnumerator` configuration section
+- Updated `index.js` to include Subdomain Enumerator in main menu (option 11)
+- Updated `package.json` to version 2.3.0
+- Expanded README.md with comprehensive Subdomain Enumerator documentation
+- Updated module count from 10 to 11 modules
+
+### Security
+- DNS timeout protection
+- Configurable delays to prevent DNS flooding
+- Wildcard detection to reduce false positives
+- Zone transfer vulnerability detection
+- Subdomain takeover detection for multiple cloud services
+
+---
+
 ## [2.2.0] - 2025-11-23
 
 ### Added
