@@ -85,5 +85,12 @@
       "maxMessages": 100,
       "interval": 10
     }
+  },
+  "subdomainEnumerator": {
+    "domain": "example.com",
+    "methods": ["all"],
+    "wordlistFile": "wordlists/subdomains.txt",
+    "delay": 100,
+    "checkWildcard": true
   }
 }
