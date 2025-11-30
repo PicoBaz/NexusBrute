@@ -16,7 +16,20 @@ Use NexusBrute only on systems you own or have explicit written permission to te
 
 ## 🚀 Features
 
-### 🔌 **WebSocket Security Tester** ⭐ NEW!
+### 🌐 **Subdomain Enumerator** ⭐ NEW!
+Advanced subdomain discovery and reconnaissance toolkit:
+- **DNS Bruteforce**: Custom wordlist-based subdomain discovery (200+ defaults)
+- **Certificate Transparency**: Query crt.sh for historical subdomain data
+- **Permutation Scanning**: Discover variations of found subdomains
+- **Wildcard Detection**: Identify and handle wildcard DNS configurations
+- **DNS Zone Transfer**: Test for misconfigured zone transfers
+- **HTTP/HTTPS Probing**: Check accessibility and gather service information
+- **DNS Record Analysis**: CNAME, MX, TXT record enumeration
+- **Subdomain Takeover Detection**: Identify vulnerable CNAMEs for 10+ services
+- **Real-time Progress**: Live subdomain discovery tracking
+- **Export Support**: JSON and CSV output formats
+
+### 🔌 **WebSocket Security Tester**
 Advanced WebSocket vulnerability scanner with real-time testing capabilities:
 - **Connection Security Testing**: Validates ws:// vs wss:// protocol security
 - **Origin Validation**: Tests for origin bypass and CORS misconfigurations
@@ -52,63 +65,15 @@ Advanced JWT (JSON Web Token) security analyzer with multiple attack vectors:
 - **Detailed Reporting**: Comprehensive security analysis with severity levels
 - **Export Support**: JSON and CSV output formats
 
-### 🔓 **Smart Brute Force**
-Intelligent login testing with advanced features:
-- Rate-limited brute force protection
-- Proxy rotation support
-- Customizable delays and retry limits
-- Multiple username/password combinations
-- Success/failure tracking
+### Additional Modules
 
-### 🔑 **Password Generator**
-Generate strong, secure passwords:
-- Customizable length and complexity
-- Special character inclusion
-- Bulk password generation
-- Cryptographically secure randomization
-
-### ⏱️ **Rate Limit Checker**
-API rate limit analysis:
-- Automated rate limit detection
-- Request timing analysis
-- Threshold identification
-- Proxy support for distributed testing
-
-### 📝 **Wordlist Optimizer**
-Streamline password lists:
-- Duplicate removal
-- Length-based filtering
-- Alphabetical or length-based sorting
-- Memory-efficient processing
-
-### 🔍 **API Fuzzer**
-Comprehensive API security testing:
-- Multiple HTTP method support (GET, POST, PUT, DELETE)
-- Custom payload injection
-- Response analysis
-- Vulnerability pattern detection
-
-### 💉 **SQL Injection Tester**
-Automated SQL injection detection:
-- Extensive payload database
-- Multiple injection techniques
-- Field-based testing
-- Error-based detection
-- Customizable test parameters
-
-### 💥 **DDoS Tester**
-Load testing and stress analysis:
-- Concurrent request simulation
-- Configurable request rates
-- Multiple HTTP methods
-- Performance monitoring
-
-### 🌐 **Proxy Rotator**
-Enhance anonymity and bypass restrictions:
-- Dynamic proxy switching
-- Protocol support (HTTP/HTTPS/SOCKS)
-- Automatic proxy validation
-- Load distribution
+- 🔓 **Smart Brute Force**: Intelligent login testing
+- 🔑 **Password Generator**: Strong password generation
+- ⏱️ **Rate Limit Checker**: API rate limit analysis
+- 📝 **Wordlist Optimizer**: Password list optimization
+- 🔍 **API Fuzzer**: Comprehensive API security testing
+- 💉 **SQL Injection Tester**: Automated SQL injection detection
+- 💥 **DDoS Tester**: Load testing and stress analysis
 
 ---
 
@@ -137,6 +102,32 @@ mkdir keys
 
 Edit `config.json` to customize module settings:
 
+### Subdomain Enumerator Configuration
+
+```json
+{
+  "subdomainEnumerator": {
+    "domain": "example.com",
+    "methods": ["all"],
+    "wordlistFile": "wordlists/subdomains.txt",
+    "delay": 100,
+    "checkWildcard": true
+  }
+}
+```
+
+**Parameters:**
+- `domain`: Target domain to enumerate (required)
+- `methods`: Array of enumeration methods (required)
+  - `"all"`: Run all methods (recommended)
+  - `"bruteforce"`: DNS bruteforce only
+  - `"crt"`: Certificate Transparency only
+  - `"permutation"`: Permutation scanning only
+  - `"zonetransfer"`: Zone transfer testing only
+- `wordlistFile`: Path to subdomain wordlist (optional, uses defaults if not provided)
+- `delay`: Delay between DNS queries in milliseconds (default: 100)
+- `checkWildcard`: Enable wildcard DNS detection (default: true)
+
 ### WebSocket Security Tester Configuration
 
 ```json
@@ -152,22 +143,6 @@ Edit `config.json` to customize module settings:
   }
 }
 ```
-
-**Parameters:**
-- `targetUrl`: WebSocket URL to test (required) - supports ws:// and wss://
-- `testTypes`: Array of test types to run (required)
-  - `"all"`: Run all tests (recommended)
-  - `"connection"`: Connection security only
-  - `"origin"`: Origin validation only
-  - `"injection"`: Message injection only
-  - `"csrf"`: CSRF protection only
-  - `"ratelimit"`: Rate limiting only
-  - `"auth"`: Authentication bypass only
-  - `"dos"`: Denial of service only
-- `delay`: Delay between requests in milliseconds (default: 500)
-- `rateLimitTest`: Rate limit testing configuration
-  - `maxMessages`: Maximum messages to send (default: 100)
-  - `interval`: Interval between messages in ms (default: 10)
 
 ### Header Injection Configuration
 
@@ -200,10 +175,6 @@ Edit `config.json` to customize module settings:
 }
 ```
 
-### Other Modules Configuration
-
-See previous documentation sections for Smart Brute, Password Generator, Rate Limit Checker, Wordlist Optimizer, API Fuzzer, SQL Injection, DDoS Tester, and Proxy configurations.
-
 ---
 
 ## 🎯 Usage
@@ -234,33 +205,32 @@ You'll see the main menu:
 7. DDoS Tester
 8. JWT Analyzer
 9. Header Injection Tester
-10. WebSocket Security Tester 🔌
-11. Exit
+10. WebSocket Security Tester
+11. Subdomain Enumerator 🌐
+12. Exit
 ```
 
-### WebSocket Security Tester Example
+### Subdomain Enumerator Example
 
 1. **Configure your target** in `config.json`:
 ```json
 {
-  "websocketTester": {
-    "targetUrl": "wss://echo.websocket.org",
-    "testTypes": ["all"],
-    "delay": 500,
-    "rateLimitTest": {
-      "maxMessages": 50,
-      "interval": 10
-    }
+  "subdomainEnumerator": {
+    "domain": "example.com",
+    "methods": ["all"],
+    "wordlistFile": "wordlists/subdomains.txt",
+    "delay": 100,
+    "checkWildcard": true
   }
 }
 ```
 
-2. **Run the tester**:
+2. **Run the enumerator**:
 ```bash
 node index.js
 ```
 
-3. **Select option 10**
+3. **Select option 11**
 
 ### Output Options
 
@@ -274,110 +244,130 @@ After each module completes, you can export results in:
 
 ## 📊 Output Examples
 
-### WebSocket Security Tester Output
+### Subdomain Enumerator Output
 
 **Console Output:**
 ```
-🔌 WebSocket Security Tester Started
+🌐 Subdomain Enumerator Started
 ================================================================
-Target: wss://example.com/ws
-Delay: 500ms
-================================================================
-
-🔍 Testing Connection Security...
-Testing wss://...
-✓ wss:// connection successful
-Testing ws://...
-✗ ws:// connection failed
-
-🔍 Testing Origin Validation...
-Testing origin 1/8...
-✗ VULNERABILITY: Origin 'http://evil.com' accepted
-
-🔍 Testing Message Injection...
-✓ Connected to WebSocket
-Testing payload 15/15...
-✗ VULNERABILITY: Payload reflected
-Payload: <script>alert("XSS")</script>
-
-🔍 Testing CSRF Protection...
-Testing No Authentication...
-✗ VULNERABILITY: No Authentication
-
-🔍 Testing Rate Limiting...
-✓ Connected to WebSocket
-Sending message 100/100...
-✗ VULNERABILITY: No rate limiting detected (100+ messages allowed)
-
-🔍 Testing Authentication Bypass...
-Testing No Token...
-✗ VULNERABILITY: No Token bypassed authentication
-
-🔍 Testing Denial of Service...
-✓ Connected to WebSocket
-Testing large message (10MB)...
-✗ VULNERABILITY: Large message accepted
-Testing connection flooding...
-✗ VULNERABILITY: 10 rapid connections allowed
-
-📊 Test Summary
+Target Domain: example.com
+Delay: 100ms
 ================================================================
 
-⚠️  Total Vulnerabilities Found: 8
+🔍 Checking for Wildcard DNS...
+✓ No wildcard DNS detected
 
-originValidation: 1 vulnerabilities
-messageInjection: 1 vulnerabilities
-csrfProtection: 1 vulnerabilities
-rateLimiting: 1 vulnerabilities
-authenticationBypass: 1 vulnerabilities
-denialOfService: 2 vulnerabilities
+🔍 Bruteforcing Subdomains...
+Testing: 150/200 - api.example.com
+✓ Found: www.example.com [93.184.216.34]
+  HTTP: 200 - Example Domain
+✓ Found: mail.example.com [93.184.216.34]
+  HTTP: 200 - Mail Server
+✓ Found: api.example.com [93.184.216.34]
+  HTTP: 200 - API Gateway
 
-Time elapsed: 45.67s
+✓ Bruteforce complete: 15 subdomains found
+
+🔍 Querying Certificate Transparency Logs...
+Verifying: admin.example.com
+✓ Found: admin.example.com [93.184.216.34]
+✓ Found: dev.example.com [93.184.216.35]
+  ⚠️  Potential takeover: GitHub Pages
+
+✓ Certificate Transparency: 8 subdomains found
+
+🔍 Performing Permutation Scan...
+Testing permutation: api-dev.example.com
+✓ Found: api-dev.example.com [93.184.216.36]
+✓ Found: api-staging.example.com [93.184.216.37]
+
+✓ Permutation scan complete: 5 additional subdomains found
+
+🔍 Testing DNS Zone Transfer...
+Found 2 nameservers: ns1.example.com, ns2.example.com
+✓ ns1.example.com: Zone transfer refused
+✓ ns2.example.com: Zone transfer refused
+
+📊 Enumeration Summary
 ================================================================
 
-✅ WebSocket Security Testing Complete!
+✓ Total Subdomains Found: 28
+
+Discovered Subdomains:
+  • admin.example.com
+  • api.example.com
+  • api-dev.example.com
+  • api-staging.example.com
+  • dev.example.com
+  • mail.example.com
+  • www.example.com
+  ...
+
+⚠️  Total Vulnerabilities Found: 1
+
+Time elapsed: 45.23s
+================================================================
+
+✅ Subdomain Enumeration Complete!
 ```
 
 **JSON Export:**
 ```json
 {
-  "timestamp": "2025-11-23T10:30:00.000Z",
-  "targetUrl": "wss://example.com/ws",
-  "tests": {
-    "connectionSecurity": [
+  "timestamp": "2025-11-24T10:30:00.000Z",
+  "domain": "example.com",
+  "wildcardCheck": {
+    "hasWildcard": false
+  },
+  "results": {
+    "bruteforce": [
       {
-        "protocol": "wss://",
-        "connected": true,
-        "secure": true,
-        "vulnerability": null
-      }
-    ],
-    "originValidation": [
+        "subdomain": "www.example.com",
+        "ips": ["93.184.216.34"],
+        "type": "A",
+        "http": {
+          "accessible": true,
+          "protocol": "https://",
+          "status": 200,
+          "title": "Example Domain",
+          "server": "nginx"
+        },
+        "cname": {
+          "hasCNAME": false
+        },
+        "vulnerabilities": []
+      },
       {
-        "origin": "http://evil.com",
-        "accepted": true,
-        "vulnerability": {
-          "type": "ORIGIN_VALIDATION_BYPASS",
-          "severity": "HIGH",
-          "description": "Server accepted connection from untrusted origin: http://evil.com"
-        }
-      }
-    ],
-    "messageInjection": [
-      {
-        "payload": "<script>alert(\"XSS\")</script>",
-        "reflected": true,
-        "vulnerability": {
-          "type": "MESSAGE_INJECTION",
-          "severity": "HIGH",
-          "description": "Payload reflected in WebSocket response without sanitization"
-        }
+        "subdomain": "dev.example.com",
+        "ips": ["93.184.216.35"],
+        "type": "A",
+        "http": {
+          "accessible": true,
+          "protocol": "https://",
+          "status": 200,
+          "title": "Development",
+          "server": "GitHub Pages"
+        },
+        "cname": {
+          "hasCNAME": true,
+          "records": ["username.github.io"]
+        },
+        "vulnerabilities": [
+          {
+            "type": "SUBDOMAIN_TAKEOVER",
+            "severity": "HIGH",
+            "service": "GitHub Pages",
+            "cname": "username.github.io",
+            "description": "Potential subdomain takeover vulnerability via GitHub Pages"
+          }
+        ]
       }
     ]
   },
   "summary": {
-    "totalVulnerabilities": 8,
-    "timeElapsed": "45.67"
+    "totalSubdomains": 28,
+    "totalVulnerabilities": 1,
+    "timeElapsed": "45.23"
   }
 }
 ```
@@ -392,112 +382,120 @@ Time elapsed: 45.67s
 - **Session Logging**: Comprehensive audit trails
 - **Error Handling**: Graceful failure management
 - **Timeout Protection**: Prevents hanging requests
-- **Connection Management**: Automatic cleanup and resource management
+- **DNS Caching**: Efficient resource usage
+- **Wildcard Detection**: Reduces false positives
 
 ---
 
 ## 📚 Module Details
 
-### WebSocket Security Tester Features
+### Subdomain Enumerator Features
 
-#### 1. Connection Security Testing
-- Tests both ws:// (insecure) and wss:// (secure) protocols
-- Identifies unencrypted WebSocket connections
-- Validates SSL/TLS implementation
-- Reports protocol downgrade vulnerabilities
+#### 1. DNS Bruteforce
+- Uses custom wordlists (200+ common subdomains included)
+- Concurrent DNS resolution
+- Real-time progress tracking
+- Configurable delay to prevent rate limiting
 
-#### 2. Origin Validation
-- Tests 8 different malicious origins:
-  - null origin
-  - External domains (http://evil.com, https://evil.com)
-  - localhost
-  - file:// protocol
-  - Path traversal attempts
-  - XSS payloads in origin header
-- Detects CORS misconfigurations
-- Identifies origin bypass vulnerabilities
+#### 2. Certificate Transparency
+- Queries crt.sh for historical certificate data
+- Discovers subdomains from SSL/TLS certificates
+- Verifies discovered subdomains via DNS
+- Extracts subdomains from wildcard certificates
 
-#### 3. Message Injection
-- 15+ comprehensive payloads:
-  - **XSS**: Multiple variants including DOM-based
-  - **SQL Injection**: Classic and modern techniques
-  - **Path Traversal**: Directory traversal attempts
-  - **Template Injection**: Multiple template engines
-  - **NoSQL Injection**: MongoDB specific payloads
-  - **Prototype Pollution**: JavaScript object manipulation
-  - **Null Byte Injection**: Binary data injection
-- Real-time response analysis
-- Payload reflection detection
-- Sanitization bypass testing
+#### 3. Permutation Scanning
+- Generates variations of discovered subdomains
+- Common patterns: -dev, -staging, -prod, -test, etc.
+- Numbered variations: 01, 02, 1, 2, etc.
+- Prefix and suffix combinations
 
-#### 4. CSRF Protection
-- Tests 3 authentication scenarios:
-  - No authentication headers
-  - Missing CSRF tokens
-  - Invalid CSRF tokens
-- Validates WebSocket-specific CSRF protections
-- Tests sensitive operation execution
+#### 4. Wildcard Detection
+- Tests for wildcard DNS configurations
+- Prevents false positives
+- Alerts user to potential issues
+- Continues enumeration with awareness
 
-#### 5. Rate Limiting
-- Configurable message flooding
-- Measures messages accepted before rate limit
-- Tests burst vs sustained rate limits
-- Identifies DoS vulnerabilities
+#### 5. DNS Zone Transfer
+- Tests all nameservers for zone transfer
+- Identifies critical misconfigurations
+- CRITICAL severity vulnerability
+- Extracts all domain records if vulnerable
 
-#### 6. Authentication Bypass
-- 5 bypass techniques:
-  - No token
-  - Invalid token
-  - Expired token
-  - Malformed token
-  - None algorithm JWT
-- Tests authentication enforcement
-- Validates token verification
+#### 6. HTTP/HTTPS Probing
+- Tests both HTTP and HTTPS
+- Extracts page titles
+- Identifies server types
+- Records status codes
 
-#### 7. Denial of Service
-- Large message testing (up to 10MB)
-- Connection flooding (multiple rapid connections)
-- Resource exhaustion detection
-- Server stability analysis
+#### 7. DNS Record Analysis
+- CNAME records
+- MX records (mail servers)
+- TXT records (SPF, DKIM, etc.)
+- A and AAAA records
+
+#### 8. Subdomain Takeover Detection
+- Detects vulnerable CNAME records
+- Supports 10+ cloud services:
+  - GitHub Pages
+  - Heroku
+  - AWS S3
+  - Azure
+  - Shopify
+  - Tumblr
+  - WordPress.com
+  - Ghost.io
+  - Bitbucket
+  - Fastly
+- HIGH severity classification
 
 ---
 
 ## 🔧 Advanced Usage
 
-### Custom Test Selection
+### Custom Wordlist
 
-Run specific tests only:
+Create `wordlists/subdomains.txt`:
+```
+www
+mail
+api
+admin
+dev
+staging
+test
+blog
+shop
+portal
+```
+
+### Selective Methods
+
+Run only specific enumeration methods:
 
 ```json
 {
-  "websocketTester": {
-    "targetUrl": "wss://example.com/ws",
-    "testTypes": ["injection", "csrf", "auth"],
-    "delay": 1000
+  "subdomainEnumerator": {
+    "domain": "example.com",
+    "methods": ["bruteforce", "crt"],
+    "delay": 50
   }
 }
 ```
 
-### Testing Multiple WebSocket Endpoints
-
-Create a script:
+### Multiple Domains
 
 ```javascript
-const WebSocketTester = require('./modules/websocketTester');
+const SubdomainEnumerator = require('./modules/subdomainEnumerator');
 
-const endpoints = [
-  'wss://api.example.com/ws',
-  'wss://chat.example.com/socket',
-  'wss://notifications.example.com/updates'
-];
+const domains = ['example.com', 'test.com', 'demo.com'];
 
-for (const endpoint of endpoints) {
-  const tester = new WebSocketTester({
-    targetUrl: endpoint,
-    testTypes: ['all'],
-    delay: 500
+for (const domain of domains) {
+  const enumerator = new SubdomainEnumerator({
+    domain,
+    methods: ['all'],
+    delay: 100
   });
-  await tester.run();
+  await enumerator.run();
 }
 ```
 
@@ -505,22 +503,22 @@ for (const endpoint of endpoints) {
 
 ## 🐛 Troubleshooting
 
-### WebSocket Security Tester Issues
+### Subdomain Enumerator Issues
 
-**Problem**: "Connection timeout"
-- **Solution**: Check if WebSocket server is accessible and increase timeout in code if needed
-
-**Problem**: "WebSocket is not defined"
-- **Solution**: Install ws package: `npm install ws`
-
-**Problem**: "All tests show no vulnerabilities"
-- **Solution**: Great! This means the WebSocket implementation is secure
-
-**Problem**: "Connection refused"
-- **Solution**: Verify the WebSocket URL is correct and server is running
+**Problem**: "No subdomains found"
+- **Solution**: Try a larger wordlist or enable all enumeration methods
 
 **Problem**: "Too many false positives"
-- **Solution**: Focus on CRITICAL and HIGH severity findings, review test configuration
+- **Solution**: Wildcard DNS detected - results may be inaccurate for this domain
+
+**Problem**: "DNS timeout errors"
+- **Solution**: Increase delay between queries or check internet connection
+
+**Problem**: "Certificate Transparency query failed"
+- **Solution**: crt.sh may be down or rate limiting, try again later
+
+**Problem**: "Zone transfer not working"
+- **Solution**: Requires `dig` command to be installed (Linux/Mac) or equivalent on Windows
 
 ---
 
@@ -528,12 +526,12 @@ for (const endpoint of endpoints) {
 
 1. **Always Get Authorization**: Obtain written permission before testing
 2. **Use Isolated Environments**: Test in controlled, non-production environments
-3. **Rate Limiting**: Use appropriate delays to avoid service disruption
+3. **Rate Limiting**: Use appropriate delays to avoid DNS server abuse
 4. **Logging**: Keep detailed logs of all testing activities
 5. **Responsible Disclosure**: Report vulnerabilities responsibly
 6. **Stay Updated**: Keep NexusBrute and dependencies up to date
-7. **Backup Data**: Ensure targets have backups before destructive tests
-8. **WebSocket Specifics**: Be aware that WebSocket connections are persistent and stateful
+7. **Respect DNS**: Don't flood DNS servers with rapid queries
+8. **Verify Results**: Always verify discovered subdomains manually
 
 ---
 
@@ -564,6 +562,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 - Styled with [Chalk](https://github.com/chalk/chalk)
 - HTTP requests via [Axios](https://axios-http.com/)
 - WebSocket support via [ws](https://github.com/websockets/ws)
+- DNS resolution via Node.js built-in dns module
 - Inspired by the security research community
 
 ---
