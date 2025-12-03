@@ -16,163 +16,140 @@ Use NexusBrute only on systems you own or have explicit written permission to te
 
 ## 🚀 Features
 
-### 🌐 **Subdomain Enumerator** ⭐ NEW!
+### 🎯 **Multi-Target Campaign Manager** ⭐ NEW!
+Advanced orchestration system for coordinating security tests across multiple targets:
+- **Sequential & Parallel Modes**: Choose execution strategy based on needs
+- **Multi-Module Support**: Run multiple security modules per target
+- **Target Management**: Load targets from JSON files or inline configuration
+- **Smart Queueing**: Intelligent operation scheduling and prioritization
+- **Real-time Monitoring**: Live progress tracking with status updates
+- **Vulnerability Aggregation**: Automatic correlation across all targets
+- **Campaign Statistics**: Comprehensive success/failure metrics
+- **Automated Reporting**: Generate detailed JSON reports with recommendations
+- **Batch Processing**: Configurable concurrency for parallel execution
+- **Flexible Delays**: Control timing between targets and modules
+
+### 🌐 **Subdomain Enumerator**
 Advanced subdomain discovery and reconnaissance toolkit:
-- **DNS Bruteforce**: Custom wordlist-based subdomain discovery (200+ defaults)
-- **Certificate Transparency**: Query crt.sh for historical subdomain data
-- **Permutation Scanning**: Discover variations of found subdomains
-- **Wildcard Detection**: Identify and handle wildcard DNS configurations
-- **DNS Zone Transfer**: Test for misconfigured zone transfers
-- **HTTP/HTTPS Probing**: Check accessibility and gather service information
-- **DNS Record Analysis**: CNAME, MX, TXT record enumeration
-- **Subdomain Takeover Detection**: Identify vulnerable CNAMEs for 10+ services
-- **Real-time Progress**: Live subdomain discovery tracking
-- **Export Support**: JSON and CSV output formats
+- DNS Bruteforce with custom wordlists
+- Certificate Transparency log mining
+- Permutation scanning
+- Wildcard detection
+- DNS Zone Transfer testing
+- Subdomain takeover detection
 
 ### 🔌 **WebSocket Security Tester**
-Advanced WebSocket vulnerability scanner with real-time testing capabilities:
-- **Connection Security Testing**: Validates ws:// vs wss:// protocol security
-- **Origin Validation**: Tests for origin bypass and CORS misconfigurations
-- **Message Injection**: 15+ payloads testing XSS, SQLi, path traversal, template injection
-- **CSRF Protection**: Validates WebSocket CSRF protection mechanisms
-- **Rate Limiting Analysis**: Tests message flooding and rate limit enforcement
-- **Authentication Bypass**: 5 authentication bypass techniques
-- **Denial of Service**: Large message and connection flooding tests
-- **Real-time Monitoring**: Live message logging and analysis
-- **Severity Classification**: CRITICAL/HIGH/MEDIUM/LOW risk ratings
-- **Export Support**: JSON and CSV output formats
+Advanced WebSocket vulnerability scanner:
+- Connection security testing
+- Origin validation
+- Message injection (15+ payloads)
+- CSRF protection validation
+- Rate limiting analysis
+- Authentication bypass testing
 
 ### 🔬 **Header Injection Tester**
-Comprehensive HTTP header vulnerability scanner with advanced injection detection:
-- **CRLF Injection Testing**: Detects header splitting and injection vulnerabilities
-- **Host Header Injection**: Tests for Host header manipulation and poisoning
-- **X-Forwarded-For Manipulation**: Identifies IP spoofing and header reflection
-- **Header Value Injection**: Tests multiple headers for XSS, SQLi, and path traversal
-- **Automatic Vulnerability Detection**: Intelligent pattern matching for security issues
-- **Multiple Attack Vectors**: 50+ payload combinations across 4 attack types
-- **Severity Ratings**: CRITICAL/HIGH/MEDIUM/LOW risk classification
-- **Detailed Reporting**: Comprehensive vulnerability reports with POC
-- **Export Support**: JSON and CSV output formats
+Comprehensive HTTP header vulnerability scanner:
+- CRLF Injection testing
+- Host Header Injection
+- X-Forwarded-For manipulation
+- Header value injection
 
 ### 🔐 **JWT Analyzer**
-Advanced JWT (JSON Web Token) security analyzer with multiple attack vectors:
-- **Token Decoding & Analysis**: Parse and decode JWT headers and payloads
-- **Security Vulnerability Detection**: Identifies common JWT security issues
-- **None Algorithm Attack**: Tests for `alg: none` vulnerability
-- **Secret Bruteforce**: HMAC secret key bruteforcing with custom wordlists
-- **Key Confusion Attack**: Tests RS256 to HS256 algorithm confusion
-- **Claims Manipulation**: Tests signature verification by manipulating claims
-- **Detailed Reporting**: Comprehensive security analysis with severity levels
-- **Export Support**: JSON and CSV output formats
+Advanced JWT security analyzer:
+- Token decoding & analysis
+- None Algorithm Attack
+- Secret bruteforce
+- Key Confusion Attack
+- Claims manipulation
 
 ### Additional Modules
 
-- 🔓 **Smart Brute Force**: Intelligent login testing
-- 🔑 **Password Generator**: Strong password generation
-- ⏱️ **Rate Limit Checker**: API rate limit analysis
-- 📝 **Wordlist Optimizer**: Password list optimization
-- 🔍 **API Fuzzer**: Comprehensive API security testing
-- 💉 **SQL Injection Tester**: Automated SQL injection detection
-- 💥 **DDoS Tester**: Load testing and stress analysis
+- 🔓 Smart Brute Force
+- 🔑 Password Generator
+- ⏱️ Rate Limit Checker
+- 📝 Wordlist Optimizer
+- 🔍 API Fuzzer
+- 💉 SQL Injection Tester
+- 💥 DDoS Tester
 
 ---
 
 ## 📦 Installation
 
-### Prerequisites
-- Node.js v14 or higher
-- npm or yarn
-
-### Setup
-
 ```bash
 git clone https://github.com/PicoBaz/NexusBrute.git
 cd NexusBrute
-
 npm install axios chalk ws
-
-mkdir results
-mkdir wordlists
-mkdir keys
+mkdir results wordlists keys
 ```
 
 ---
 
 ## ⚙️ Configuration
 
-Edit `config.json` to customize module settings:
-
-### Subdomain Enumerator Configuration
+### Multi-Target Campaign Manager Configuration
 
 ```json
 {
-  "subdomainEnumerator": {
-    "domain": "example.com",
-    "methods": ["all"],
-    "wordlistFile": "wordlists/subdomains.txt",
-    "delay": 100,
-    "checkWildcard": true
+  "campaignManager": {
+    "campaignName": "Security Assessment 2025",
+    "mode": "sequential",
+    "targetsFile": "campaign-targets.json",
+    "modules": [
+      {
+        "name": "headerInjection",
+        "config": {
+          "testTypes": ["all"],
+          "delay": 500
+        }
+      },
+      {
+        "name": "subdomainEnumerator",
+        "config": {
+          "methods": ["bruteforce", "crt"],
+          "delay": 100
+        }
+      }
+    ],
+    "delayBetweenTargets": 2000,
+    "delayBetweenModules": 1000,
+    "maxConcurrent": 3,
+    "generateReport": true,
+    "reportPath": "results/campaign-report.json"
   }
 }
 ```
 
 **Parameters:**
-- `domain`: Target domain to enumerate (required)
-- `methods`: Array of enumeration methods (required)
-  - `"all"`: Run all methods (recommended)
-  - `"bruteforce"`: DNS bruteforce only
-  - `"crt"`: Certificate Transparency only
-  - `"permutation"`: Permutation scanning only
-  - `"zonetransfer"`: Zone transfer testing only
-- `wordlistFile`: Path to subdomain wordlist (optional, uses defaults if not provided)
-- `delay`: Delay between DNS queries in milliseconds (default: 100)
-- `checkWildcard`: Enable wildcard DNS detection (default: true)
+- `campaignName`: Name for your security campaign (required)
+- `mode`: Execution mode - "sequential" or "parallel" (default: "sequential")
+- `targetsFile`: Path to JSON file containing targets
+- `targets`: Inline array of target objects (alternative to targetsFile)
+- `modules`: Array of modules to run on each target
+- `delayBetweenTargets`: Delay in ms between targets (sequential mode)
+- `delayBetweenModules`: Delay in ms between modules per target
+- `maxConcurrent`: Max concurrent operations (parallel mode, default: 3)
+- `generateReport`: Enable report generation (default: false)
+- `reportPath`: Path for generated report
 
-### WebSocket Security Tester Configuration
-
+**Targets File Format** (`campaign-targets.json`):
 ```json
-{
-  "websocketTester": {
-    "targetUrl": "wss://example.com/ws",
-    "testTypes": ["all"],
-    "delay": 500,
-    "rateLimitTest": {
-      "maxMessages": 100,
-      "interval": 10
+[
+  {
+    "name": "Production API",
+    "target": "api.example.com",
+    "config": {
+      "targetUrl": "https://api.example.com"
+    }
+  },
+  {
+    "name": "Main Domain",
+    "target": "example.com",
+    "config": {
+      "domain": "example.com"
     }
   }
-}
-```
-
-### Header Injection Configuration
-
-```json
-{
-  "headerInjection": {
-    "targetUrl": "https://example.com",
-    "testTypes": ["all"],
-    "delay": 500,
-    "useProxy": false
-  }
-}
-```
-
-### JWT Analyzer Configuration
-
-```json
-{
-  "jwtAnalyzer": {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "targetUrl": "https://api.example.com/protected",
-    "wordlistFile": "wordlists/jwt_secrets.txt",
-    "publicKeyFile": "keys/public.pem",
-    "testClaims": {
-      "role": "admin",
-      "isAdmin": true
-    },
-    "useProxy": false
-  }
-}
+]
 ```
 
 ---
@@ -181,14 +158,11 @@ Edit `config.json` to customize module settings:
 
 ### Interactive Mode
 
-Start the interactive CLI:
-
 ```bash
 node index.js
 ```
 
-You'll see the main menu:
-
+Menu:
 ```
 ╔════════════════════════════════════════╗
 ║       🌌 NexusBrute Toolkit 🌌       ║
@@ -206,296 +180,249 @@ You'll see the main menu:
 8. JWT Analyzer
 9. Header Injection Tester
 10. WebSocket Security Tester
-11. Subdomain Enumerator 🌐
-12. Exit
+11. Subdomain Enumerator
+12. Multi-Target Campaign Manager 🎯
+13. Exit
 ```
 
-### Subdomain Enumerator Example
+### Campaign Manager Example
 
-1. **Configure your target** in `config.json`:
+1. **Create targets file** `campaign-targets.json`:
 ```json
-{
-  "subdomainEnumerator": {
-    "domain": "example.com",
-    "methods": ["all"],
-    "wordlistFile": "wordlists/subdomains.txt",
-    "delay": 100,
-    "checkWildcard": true
+[
+  {
+    "name": "Production",
+    "target": "prod.example.com",
+    "config": { "targetUrl": "https://prod.example.com" }
+  },
+  {
+    "name": "Staging",
+    "target": "staging.example.com",
+    "config": { "targetUrl": "https://staging.example.com" }
   }
-}
+]
 ```
 
-2. **Run the enumerator**:
-```bash
-node index.js
-```
+2. **Configure campaign** in `config.json`
 
-3. **Select option 11**
-
-### Output Options
-
-After each module completes, you can export results in:
-- **JSON**: Structured data for programmatic access
-- **CSV**: Spreadsheet-compatible format
-- **Both**: Both formats simultaneously
-- **Console Only**: Display results without saving
+3. **Run NexusBrute** and select option 12
 
 ---
 
 ## 📊 Output Examples
 
-### Subdomain Enumerator Output
+### Campaign Manager Output
 
 **Console Output:**
 ```
-🌐 Subdomain Enumerator Started
+🎯 Multi-Target Campaign Manager Started
 ================================================================
-Target Domain: example.com
-Delay: 100ms
-================================================================
-
-🔍 Checking for Wildcard DNS...
-✓ No wildcard DNS detected
-
-🔍 Bruteforcing Subdomains...
-Testing: 150/200 - api.example.com
-✓ Found: www.example.com [93.184.216.34]
-  HTTP: 200 - Example Domain
-✓ Found: mail.example.com [93.184.216.34]
-  HTTP: 200 - Mail Server
-✓ Found: api.example.com [93.184.216.34]
-  HTTP: 200 - API Gateway
-
-✓ Bruteforce complete: 15 subdomains found
-
-🔍 Querying Certificate Transparency Logs...
-Verifying: admin.example.com
-✓ Found: admin.example.com [93.184.216.34]
-✓ Found: dev.example.com [93.184.216.35]
-  ⚠️  Potential takeover: GitHub Pages
-
-✓ Certificate Transparency: 8 subdomains found
-
-🔍 Performing Permutation Scan...
-Testing permutation: api-dev.example.com
-✓ Found: api-dev.example.com [93.184.216.36]
-✓ Found: api-staging.example.com [93.184.216.37]
-
-✓ Permutation scan complete: 5 additional subdomains found
-
-🔍 Testing DNS Zone Transfer...
-Found 2 nameservers: ns1.example.com, ns2.example.com
-✓ ns1.example.com: Zone transfer refused
-✓ ns2.example.com: Zone transfer refused
-
-📊 Enumeration Summary
+Campaign: Security Assessment 2025
+Mode: sequential
 ================================================================
 
-✓ Total Subdomains Found: 28
+📊 Campaign Overview:
+  Targets: 5
+  Modules: 3
+  Total Operations: 15
 
-Discovered Subdomains:
-  • admin.example.com
-  • api.example.com
-  • api-dev.example.com
-  • api-staging.example.com
-  • dev.example.com
-  • mail.example.com
-  • www.example.com
-  ...
+🔄 Running Sequential Campaign...
 
-⚠️  Total Vulnerabilities Found: 1
+[1/5] Processing: Production API
+------------------------------------------------------------
+  [1/3] Running headerInjection... ✓
+    Found 2 vulnerabilities
+  [2/3] Running subdomainEnumerator... ✓
+  [3/3] Running websocketTester... ✓
+    Found 1 vulnerabilities
 
-Time elapsed: 45.23s
+[2/5] Processing: Staging Environment
+------------------------------------------------------------
+  [1/3] Running headerInjection... ✓
+  [2/3] Running subdomainEnumerator... ✓
+    Found 3 vulnerabilities
+  [3/3] Running websocketTester... ✗
+    Error: Connection timeout
+
+📊 Campaign Summary
 ================================================================
 
-✅ Subdomain Enumeration Complete!
+Campaign: Security Assessment 2025
+Duration: 245.67s
+Mode: sequential
+
+📈 Statistics:
+  Total Targets: 5
+  Total Modules: 3
+  Total Operations: 15
+  Successful: 14
+  Failed: 1
+
+⚠️  Total Vulnerabilities Found: 12
+
+Vulnerabilities by Target:
+  • Staging Environment: 5
+  • Production API: 4
+  • Development Server: 3
+
+================================================================
+
+📄 Report saved to: results/campaign-report.json
+
+✅ Campaign Complete!
 ```
 
-**JSON Export:**
+**Generated Report** (`campaign-report.json`):
 ```json
 {
-  "timestamp": "2025-11-24T10:30:00.000Z",
-  "domain": "example.com",
-  "wildcardCheck": {
-    "hasWildcard": false
-  },
-  "results": {
-    "bruteforce": [
-      {
-        "subdomain": "www.example.com",
-        "ips": ["93.184.216.34"],
-        "type": "A",
-        "http": {
-          "accessible": true,
-          "protocol": "https://",
-          "status": 200,
-          "title": "Example Domain",
-          "server": "nginx"
-        },
-        "cname": {
-          "hasCNAME": false
-        },
-        "vulnerabilities": []
-      },
-      {
-        "subdomain": "dev.example.com",
-        "ips": ["93.184.216.35"],
-        "type": "A",
-        "http": {
-          "accessible": true,
-          "protocol": "https://",
-          "status": 200,
-          "title": "Development",
-          "server": "GitHub Pages"
-        },
-        "cname": {
-          "hasCNAME": true,
-          "records": ["username.github.io"]
-        },
-        "vulnerabilities": [
-          {
-            "type": "SUBDOMAIN_TAKEOVER",
-            "severity": "HIGH",
-            "service": "GitHub Pages",
-            "cname": "username.github.io",
-            "description": "Potential subdomain takeover vulnerability via GitHub Pages"
-          }
-        ]
-      }
-    ]
+  "title": "Security Campaign Report: Security Assessment 2025",
+  "generated": "2025-11-25T10:30:00.000Z",
+  "campaign": {
+    "name": "Security Assessment 2025",
+    "startTime": "2025-11-25T10:26:00.000Z",
+    "endTime": "2025-11-25T10:30:05.000Z",
+    "duration": "245.67",
+    "mode": "sequential"
   },
   "summary": {
-    "totalSubdomains": 28,
-    "totalVulnerabilities": 1,
-    "timeElapsed": "45.23"
-  }
+    "totalTargets": 5,
+    "totalModules": 3,
+    "totalOperations": 15,
+    "successfulOperations": 14,
+    "failedOperations": 1
+  },
+  "targets": [
+    {
+      "name": "Production API",
+      "vulnerabilities": 4,
+      "status": "completed",
+      "modules": [...]
+    }
+  ],
+  "recommendations": [
+    "Critical: Address all identified vulnerabilities immediately",
+    "Review security configurations across all tested targets",
+    "Review 1 failed operations for potential issues",
+    "High-risk targets identified - prioritize remediation"
+  ]
 }
 ```
-
----
-
-## 🛡️ Security Features
-
-- **Rate Limiting**: Prevents service disruption
-- **Proxy Support**: Distributes requests across multiple IPs
-- **Configurable Delays**: Mimics human behavior
-- **Session Logging**: Comprehensive audit trails
-- **Error Handling**: Graceful failure management
-- **Timeout Protection**: Prevents hanging requests
-- **DNS Caching**: Efficient resource usage
-- **Wildcard Detection**: Reduces false positives
 
 ---
 
 ## 📚 Module Details
 
-### Subdomain Enumerator Features
+### Multi-Target Campaign Manager Features
 
-#### 1. DNS Bruteforce
-- Uses custom wordlists (200+ common subdomains included)
-- Concurrent DNS resolution
-- Real-time progress tracking
-- Configurable delay to prevent rate limiting
+#### 1. Execution Modes
 
-#### 2. Certificate Transparency
-- Queries crt.sh for historical certificate data
-- Discovers subdomains from SSL/TLS certificates
-- Verifies discovered subdomains via DNS
-- Extracts subdomains from wildcard certificates
+**Sequential Mode:**
+- Tests targets one at a time
+- Predictable execution order
+- Lower resource usage
+- Configurable delays between operations
+- Best for rate-limited environments
 
-#### 3. Permutation Scanning
-- Generates variations of discovered subdomains
-- Common patterns: -dev, -staging, -prod, -test, etc.
-- Numbered variations: 01, 02, 1, 2, etc.
-- Prefix and suffix combinations
+**Parallel Mode:**
+- Tests multiple targets simultaneously
+- Faster completion time
+- Configurable concurrency limit
+- Batch processing
+- Best for large-scale assessments
 
-#### 4. Wildcard Detection
-- Tests for wildcard DNS configurations
-- Prevents false positives
-- Alerts user to potential issues
-- Continues enumeration with awareness
+#### 2. Target Management
 
-#### 5. DNS Zone Transfer
-- Tests all nameservers for zone transfer
-- Identifies critical misconfigurations
-- CRITICAL severity vulnerability
-- Extracts all domain records if vulnerable
+- Load targets from JSON files
+- Inline target configuration
+- Per-target custom settings
+- Target naming and identification
+- Flexible configuration inheritance
 
-#### 6. HTTP/HTTPS Probing
-- Tests both HTTP and HTTPS
-- Extracts page titles
-- Identifies server types
-- Records status codes
+#### 3. Module Orchestration
 
-#### 7. DNS Record Analysis
-- CNAME records
-- MX records (mail servers)
-- TXT records (SPF, DKIM, etc.)
-- A and AAAA records
+- Run any combination of security modules
+- Per-module configuration
+- Automatic result aggregation
+- Module success/failure tracking
+- Time tracking per operation
 
-#### 8. Subdomain Takeover Detection
-- Detects vulnerable CNAME records
-- Supports 10+ cloud services:
-  - GitHub Pages
-  - Heroku
-  - AWS S3
-  - Azure
-  - Shopify
-  - Tumblr
-  - WordPress.com
-  - Ghost.io
-  - Bitbucket
-  - Fastly
-- HIGH severity classification
+#### 4. Campaign Analytics
+
+- Real-time operation tracking
+- Success/failure statistics
+- Vulnerability aggregation by target
+- Total operations count
+- Time elapsed measurements
+
+#### 5. Reporting System
+
+- Automated JSON report generation
+- Campaign summary and statistics
+- Target-level vulnerability breakdown
+- Security recommendations
+- Timestamp and duration tracking
+
+#### 6. Queue Management
+
+- Intelligent operation scheduling
+- Configurable delays
+- Batch processing support
+- Concurrent execution control
+- Failed operation tracking
 
 ---
 
 ## 🔧 Advanced Usage
 
-### Custom Wordlist
-
-Create `wordlists/subdomains.txt`:
-```
-www
-mail
-api
-admin
-dev
-staging
-test
-blog
-shop
-portal
-```
-
-### Selective Methods
-
-Run only specific enumeration methods:
+### Parallel Campaign with High Concurrency
 
 ```json
 {
-  "subdomainEnumerator": {
-    "domain": "example.com",
-    "methods": ["bruteforce", "crt"],
-    "delay": 50
+  "campaignManager": {
+    "campaignName": "Fast Scan",
+    "mode": "parallel",
+    "maxConcurrent": 10,
+    "targetsFile": "targets.json",
+    "modules": [
+      { "name": "headerInjection" }
+    ]
   }
 }
 ```
 
-### Multiple Domains
+### Sequential Campaign with Delays
 
-```javascript
-const SubdomainEnumerator = require('./modules/subdomainEnumerator');
+```json
+{
+  "campaignManager": {
+    "campaignName": "Stealth Scan",
+    "mode": "sequential",
+    "delayBetweenTargets": 5000,
+    "delayBetweenModules": 2000,
+    "targetsFile": "targets.json",
+    "modules": [
+      { "name": "subdomainEnumerator" },
+      { "name": "headerInjection" }
+    ]
+  }
+}
+```
 
-const domains = ['example.com', 'test.com', 'demo.com'];
+### Inline Targets Configuration
 
-for (const domain of domains) {
-  const enumerator = new SubdomainEnumerator({
-    domain,
-    methods: ['all'],
-    delay: 100
-  });
-  await enumerator.run();
+```json
+{
+  "campaignManager": {
+    "campaignName": "Quick Test",
+    "mode": "sequential",
+    "targets": [
+      {
+        "name": "API",
+        "config": { "targetUrl": "https://api.example.com" }
+      }
+    ],
+    "modules": [...]
+  }
 }
 ```
 
@@ -503,66 +430,50 @@ for (const domain of domains) {
 
 ## 🐛 Troubleshooting
 
-### Subdomain Enumerator Issues
+### Campaign Manager Issues
 
-**Problem**: "No subdomains found"
-- **Solution**: Try a larger wordlist or enable all enumeration methods
+**Problem**: "No targets configured"
+- **Solution**: Ensure targetsFile exists or targets array is populated
 
-**Problem**: "Too many false positives"
-- **Solution**: Wildcard DNS detected - results may be inaccurate for this domain
+**Problem**: "Module not found"
+- **Solution**: Check module name spelling, only supported modules work
 
-**Problem**: "DNS timeout errors"
-- **Solution**: Increase delay between queries or check internet connection
+**Problem**: "High failure rate"
+- **Solution**: Increase delays, check target accessibility
 
-**Problem**: "Certificate Transparency query failed"
-- **Solution**: crt.sh may be down or rate limiting, try again later
-
-**Problem**: "Zone transfer not working"
-- **Solution**: Requires `dig` command to be installed (Linux/Mac) or equivalent on Windows
+**Problem**: "Slow parallel execution"
+- **Solution**: Increase maxConcurrent value for faster processing
 
 ---
 
 ## 📖 Best Practices
 
-1. **Always Get Authorization**: Obtain written permission before testing
-2. **Use Isolated Environments**: Test in controlled, non-production environments
-3. **Rate Limiting**: Use appropriate delays to avoid DNS server abuse
-4. **Logging**: Keep detailed logs of all testing activities
-5. **Responsible Disclosure**: Report vulnerabilities responsibly
-6. **Stay Updated**: Keep NexusBrute and dependencies up to date
-7. **Respect DNS**: Don't flood DNS servers with rapid queries
-8. **Verify Results**: Always verify discovered subdomains manually
+1. **Start with Sequential Mode**: Test with sequential before parallel
+2. **Use Appropriate Delays**: Respect rate limits and server load
+3. **Monitor Progress**: Watch real-time output for issues
+4. **Review Reports**: Analyze generated reports thoroughly
+5. **Prioritize Targets**: Focus on critical assets first
+6. **Test Configuration**: Validate on small target set first
+7. **Keep Records**: Export and archive campaign results
+8. **Incremental Testing**: Run campaigns in stages for large infrastructures
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these guidelines:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/NewModule`)
-3. Follow the existing code structure and modularity
-4. Add tests for new features
-5. Update documentation
-6. Commit changes (`git commit -m 'Add NewModule'`)
-7. Push to branch (`git push origin feature/NewModule`)
-8. Open a Pull Request
+Contributions welcome! Fork, create feature branch, submit PR.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Built with [Node.js](https://nodejs.org/)
-- Styled with [Chalk](https://github.com/chalk/chalk)
-- HTTP requests via [Axios](https://axios-http.com/)
-- WebSocket support via [ws](https://github.com/websockets/ws)
-- DNS resolution via Node.js built-in dns module
+- Built with Node.js, Chalk, Axios, ws
 - Inspired by the security research community
 
 ---
@@ -573,7 +484,6 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 - **Email**: picobaz3@gmail.com
 - **Telegram**: [@picobaz](https://t.me/picobaz)
 - **Issues**: [GitHub Issues](https://github.com/PicoBaz/NexusBrute/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/PicoBaz/NexusBrute/discussions)
 
 ---
 
@@ -585,7 +495,5 @@ If you find NexusBrute useful, please consider giving it a star! ⭐
 ---
 
 **Remember: With great power comes great responsibility. Use NexusBrute ethically and legally.** 🌌
-
----
 
 Made with ❤️ by the security community
