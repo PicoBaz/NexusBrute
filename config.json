@@ -92,5 +92,31 @@
     "wordlistFile": "wordlists/subdomains.txt",
     "delay": 100,
     "checkWildcard": true
+  },
+  "campaignManager": {
+    "campaignName": "Security Assessment 2025",
+    "mode": "sequential",
+    "targetsFile": "campaign-targets.json",
+    "modules": [
+      {
+        "name": "headerInjection",
+        "config": {
+          "testTypes": ["all"],
+          "delay": 500
+        }
+      },
+      {
+        "name": "subdomainEnumerator",
+        "config": {
+          "methods": ["bruteforce", "crt"],
+          "delay": 100
+        }
+      }
+    ],
+    "delayBetweenTargets": 2000,
+    "delayBetweenModules": 1000,
+    "maxConcurrent": 3,
+    "generateReport": true,
+    "reportPath": "results/campaign-report.json"
   }
 }
