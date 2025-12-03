@@ -14,6 +14,7 @@ const JWTAnalyzer = require('./modules/jwtAnalyzer');
 const HeaderInjection = require('./modules/headerInjection');
 const WebSocketTester = require('./modules/websocketTester');
 const SubdomainEnumerator = require('./modules/subdomainEnumerator');
+const CampaignManager = require('./modules/campaignManager');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -44,8 +45,9 @@ function showMenu() {
   console.log(chalk.white('8. JWT Analyzer'));
   console.log(chalk.white('9. Header Injection Tester'));
   console.log(chalk.white('10. WebSocket Security Tester'));
-  console.log(chalk.white('11. Subdomain Enumerator 🌐'));
-  console.log(chalk.white('12. Exit\n'));
+  console.log(chalk.white('11. Subdomain Enumerator'));
+  console.log(chalk.white('12. Multi-Target Campaign Manager 🎯'));
+  console.log(chalk.white('13. Exit\n'));
 }
 
 function askForOutputFormat(callback) {
@@ -201,6 +203,17 @@ async function runModule(choice) {
       break;
 
     case '12':
+      console.log(chalk.green('\n🎯 Starting Multi-Target Campaign Manager...\n'));
+      module = new CampaignManager(config.campaignManager);
+      results = await module.run();
+      askForOutputFormat((format) => {
+        saveResults('campaign', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '13':
       console.log(chalk.bold.cyan('\n👋 Thanks for using NexusBrute! Stay Ethical! 🌌\n'));
       rl.close();
       process.exit(0);
