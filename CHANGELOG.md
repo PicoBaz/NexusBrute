@@ -4,6 +4,39 @@ All notable changes to NexusBrute will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+---
+
+## [2.4.0] - 2025-11-25
+
+### Added
+- **Multi-Target Campaign Manager Module**: Advanced orchestration system for testing multiple targets
+  - Sequential and parallel execution modes
+  - Support for multiple security modules per target
+  - Configurable delays between targets and modules
+  - Automatic vulnerability aggregation across all targets
+  - Campaign-level reporting and statistics
+  - Target prioritization and queue management
+  - Batch processing with configurable concurrency
+  - Failed operation tracking and retry logic
+  - JSON report generation with recommendations
+  - Real-time progress tracking and live updates
+  - JSON and CSV export support
+- Sample campaign targets file (campaign-targets.json)
+- Enhanced module menu with Campaign Manager option
+
+### Changed
+- Updated `config.json` with `campaignManager` configuration section
+- Updated `index.js` to include Campaign Manager in main menu (option 12)
+- Updated `package.json` to version 2.4.0
+- Expanded README.md with comprehensive Campaign Manager documentation
+- Updated module count from 11 to 12 modules
+
+### Features
+- Multi-target testing automation
+- Intelligent vulnerability correlation
+- Comprehensive campaign statistics
+- Automated report generation
+- Real-time campaign monitoring
 
 ---
 
