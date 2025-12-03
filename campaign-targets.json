@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Production API",
+    "target": "api.example.com",
+    "config": {
+      "targetUrl": "https://api.example.com"
+    }
+  },
+  {
+    "name": "Staging Environment",
+    "target": "staging.example.com",
+    "config": {
+      "targetUrl": "https://staging.example.com"
+    }
+  },
+  {
+    "name": "Development Server",
+    "target": "dev.example.com",
+    "config": {
+      "targetUrl": "https://dev.example.com"
+    }
+  },
+  {
+    "name": "WebSocket Service",
+    "target": "ws.example.com",
+    "config": {
+      "targetUrl": "wss://ws.example.com/socket"
+    }
+  },
+  {
+    "name": "Main Domain",
+    "target": "example.com",
+    "config": {
+      "domain": "example.com"
+    }
+  }
+]
