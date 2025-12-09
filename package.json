@@ -1,6 +1,6 @@
 {
   "name": "nexusbrute",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "A modular Node.js toolkit for ethical security testing",
   "main": "index.js",
   "scripts": {

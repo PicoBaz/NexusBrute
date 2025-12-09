@@ -16,61 +16,55 @@ Use NexusBrute only on systems you own or have explicit written permission to te
 
 ## 🚀 Features
 
-### 🎯 **Multi-Target Campaign Manager** ⭐ NEW!
-Advanced orchestration system for coordinating security tests across multiple targets:
-- **Sequential & Parallel Modes**: Choose execution strategy based on needs
-- **Multi-Module Support**: Run multiple security modules per target
-- **Target Management**: Load targets from JSON files or inline configuration
-- **Smart Queueing**: Intelligent operation scheduling and prioritization
-- **Real-time Monitoring**: Live progress tracking with status updates
-- **Vulnerability Aggregation**: Automatic correlation across all targets
-- **Campaign Statistics**: Comprehensive success/failure metrics
-- **Automated Reporting**: Generate detailed JSON reports with recommendations
-- **Batch Processing**: Configurable concurrency for parallel execution
-- **Flexible Delays**: Control timing between targets and modules
+### 🔒 **SSL/TLS Analyzer** ⭐ NEW!
+Comprehensive SSL/TLS security testing and certificate analysis:
+- **Protocol Testing**: SSLv3, TLS 1.0, 1.1, 1.2, 1.3 support detection
+- **Cipher Suite Analysis**: Weak cipher identification (RC4, DES, 3DES, MD5)
+- **Certificate Validation**: Expiration, validity period, and chain verification
+- **Self-Signed Detection**: Identifies self-signed certificates
+- **Key Size Analysis**: Validates RSA/ECDSA key sizes (minimum 2048-bit)
+- **Signature Algorithm**: Detects weak algorithms (SHA-1)
+- **SAN Enumeration**: Lists Subject Alternative Names
+- **HTTPS Redirect**: Tests HTTP to HTTPS redirection
+- **HSTS Validation**: Checks HTTP Strict Transport Security configuration
+- **Chain Verification**: Validates complete certificate chain
+- **Automated Severity**: CRITICAL/HIGH/MEDIUM/LOW classification
+- **Export Support**: JSON and CSV output formats
+
+### 🎯 **Multi-Target Campaign Manager**
+Advanced orchestration system for coordinating security tests:
+- Sequential & Parallel execution modes
+- Multi-module support per target
+- Real-time monitoring and vulnerability aggregation
+- Automated reporting with recommendations
 
 ### 🌐 **Subdomain Enumerator**
-Advanced subdomain discovery and reconnaissance toolkit:
-- DNS Bruteforce with custom wordlists
-- Certificate Transparency log mining
-- Permutation scanning
-- Wildcard detection
-- DNS Zone Transfer testing
+Advanced subdomain discovery and reconnaissance:
+- DNS Bruteforce, Certificate Transparency
+- Permutation scanning, Wildcard detection
 - Subdomain takeover detection
 
 ### 🔌 **WebSocket Security Tester**
-Advanced WebSocket vulnerability scanner:
-- Connection security testing
-- Origin validation
-- Message injection (15+ payloads)
-- CSRF protection validation
-- Rate limiting analysis
+Real-time WebSocket vulnerability scanner:
+- Connection security, Origin validation
+- Message injection, CSRF protection
 - Authentication bypass testing
 
 ### 🔬 **Header Injection Tester**
-Comprehensive HTTP header vulnerability scanner:
-- CRLF Injection testing
-- Host Header Injection
+HTTP header vulnerability scanner:
+- CRLF Injection, Host Header Injection
 - X-Forwarded-For manipulation
-- Header value injection
 
 ### 🔐 **JWT Analyzer**
-Advanced JWT security analyzer:
-- Token decoding & analysis
-- None Algorithm Attack
-- Secret bruteforce
-- Key Confusion Attack
-- Claims manipulation
+JWT security analyzer:
+- Token decoding, None Algorithm Attack
+- Secret bruteforce, Key Confusion
 
 ### Additional Modules
 
-- 🔓 Smart Brute Force
-- 🔑 Password Generator
-- ⏱️ Rate Limit Checker
-- 📝 Wordlist Optimizer
-- 🔍 API Fuzzer
-- 💉 SQL Injection Tester
-- 💥 DDoS Tester
+- Smart Brute Force, Password Generator
+- Rate Limit Checker, Wordlist Optimizer
+- API Fuzzer, SQL Injection Tester, DDoS Tester
 
 ---
 
@@ -87,70 +81,18 @@ mkdir results wordlists keys
 
 ## ⚙️ Configuration
 
-### Multi-Target Campaign Manager Configuration
+### SSL/TLS Analyzer Configuration
 
 ```json
 {
-  "campaignManager": {
-    "campaignName": "Security Assessment 2025",
-    "mode": "sequential",
-    "targetsFile": "campaign-targets.json",
-    "modules": [
-      {
-        "name": "headerInjection",
-        "config": {
-          "testTypes": ["all"],
-          "delay": 500
-        }
-      },
-      {
-        "name": "subdomainEnumerator",
-        "config": {
-          "methods": ["bruteforce", "crt"],
-          "delay": 100
-        }
-      }
-    ],
-    "delayBetweenTargets": 2000,
-    "delayBetweenModules": 1000,
-    "maxConcurrent": 3,
-    "generateReport": true,
-    "reportPath": "results/campaign-report.json"
+  "sslAnalyzer": {
+    "target": "example.com"
   }
 }
 ```
 
 **Parameters:**
-- `campaignName`: Name for your security campaign (required)
-- `mode`: Execution mode - "sequential" or "parallel" (default: "sequential")
-- `targetsFile`: Path to JSON file containing targets
-- `targets`: Inline array of target objects (alternative to targetsFile)
-- `modules`: Array of modules to run on each target
-- `delayBetweenTargets`: Delay in ms between targets (sequential mode)
-- `delayBetweenModules`: Delay in ms between modules per target
-- `maxConcurrent`: Max concurrent operations (parallel mode, default: 3)
-- `generateReport`: Enable report generation (default: false)
-- `reportPath`: Path for generated report
-
-**Targets File Format** (`campaign-targets.json`):
-```json
-[
-  {
-    "name": "Production API",
-    "target": "api.example.com",
-    "config": {
-      "targetUrl": "https://api.example.com"
-    }
-  },
-  {
-    "name": "Main Domain",
-    "target": "example.com",
-    "config": {
-      "domain": "example.com"
-    }
-  }
-]
-```
+- `target`: Target domain or hostname (required) - can include port like "example.com:443"
 
 ---
 
@@ -181,130 +123,142 @@ Menu:
 9. Header Injection Tester
 10. WebSocket Security Tester
 11. Subdomain Enumerator
-12. Multi-Target Campaign Manager 🎯
-13. Exit
+12. Multi-Target Campaign Manager
+13. SSL/TLS Analyzer 🔒
+14. Exit
 ```
 
-### Campaign Manager Example
+### SSL/TLS Analyzer Example
 
-1. **Create targets file** `campaign-targets.json`:
+1. **Configure target** in `config.json`:
 ```json
-[
-  {
-    "name": "Production",
-    "target": "prod.example.com",
-    "config": { "targetUrl": "https://prod.example.com" }
-  },
-  {
-    "name": "Staging",
-    "target": "staging.example.com",
-    "config": { "targetUrl": "https://staging.example.com" }
+{
+  "sslAnalyzer": {
+    "target": "google.com"
   }
-]
+}
 ```
 
-2. **Configure campaign** in `config.json`
-
-3. **Run NexusBrute** and select option 12
+2. **Run NexusBrute** and select option 13
 
 ---
 
 ## 📊 Output Examples
 
-### Campaign Manager Output
+### SSL/TLS Analyzer Output
 
 **Console Output:**
 ```
-🎯 Multi-Target Campaign Manager Started
+🔒 SSL/TLS Analyzer Started
 ================================================================
-Campaign: Security Assessment 2025
-Mode: sequential
-================================================================
-
-📊 Campaign Overview:
-  Targets: 5
-  Modules: 3
-  Total Operations: 15
-
-🔄 Running Sequential Campaign...
-
-[1/5] Processing: Production API
-------------------------------------------------------------
-  [1/3] Running headerInjection... ✓
-    Found 2 vulnerabilities
-  [2/3] Running subdomainEnumerator... ✓
-  [3/3] Running websocketTester... ✓
-    Found 1 vulnerabilities
-
-[2/5] Processing: Staging Environment
-------------------------------------------------------------
-  [1/3] Running headerInjection... ✓
-  [2/3] Running subdomainEnumerator... ✓
-    Found 3 vulnerabilities
-  [3/3] Running websocketTester... ✗
-    Error: Connection timeout
-
-📊 Campaign Summary
+Target: google.com
 ================================================================
 
-Campaign: Security Assessment 2025
-Duration: 245.67s
-Mode: sequential
+✓ Successfully connected to google.com:443
+  Protocol: TLSv1.3
+  Cipher: TLS_AES_256_GCM_SHA384
 
-📈 Statistics:
-  Total Targets: 5
-  Total Modules: 3
-  Total Operations: 15
-  Successful: 14
-  Failed: 1
+🔍 Analyzing Certificate...
 
-⚠️  Total Vulnerabilities Found: 12
+Certificate Details:
+  Subject: *.google.com
+  Issuer: GTS CA 1C3
+  Valid From: Nov 13 08:21:04 2025 GMT
+  Valid To: Feb 05 08:21:03 2026 GMT
 
-Vulnerabilities by Target:
-  • Staging Environment: 5
-  • Production API: 4
-  • Development Server: 3
+✓ Certificate valid (72 days remaining)
+✓ Key size: 2048 bits
+✓ Signature algorithm: sha256WithRSAEncryption
 
+Subject Alternative Names:
+  • *.google.com
+  • google.com
+  ... and 50 more
+
+🔍 Testing SSL/TLS Protocol Support...
+Testing TLSv1.3...
+✓ TLSv1.0 not supported
+✓ TLSv1.1 not supported
+✓ TLSv1.2 not supported
+✗ TLSv1.3 supported
+
+🔍 Testing Cipher Suites...
+
+Negotiated Cipher: TLS_AES_256_GCM_SHA384
+  Version: TLSv1.3
+  Bits: 256
+✓ Cipher appears secure
+
+🔍 Testing Certificate Chain...
+
+Certificate Chain (3 certificates):
+  1. *.google.com
+     Issued by: GTS CA 1C3
+  2. GTS CA 1C3
+     Issued by: GTS Root R1
+  3. GTS Root R1
+     Issued by: GTS Root R1
+
+✓ Certificate chain appears valid
+
+🔍 Testing HTTP to HTTPS Redirect...
+✓ HTTP redirects to HTTPS
+
+🔍 Testing HSTS...
+✓ HSTS header present
+  max-age=31536000; includeSubDomains; preload
+
+📊 SSL/TLS Analysis Summary
 ================================================================
 
-📄 Report saved to: results/campaign-report.json
+✓ No critical vulnerabilities detected
+⚠️  Warnings: 0
 
-✅ Campaign Complete!
+Time elapsed: 3.45s
+================================================================
+
+✅ SSL/TLS Analysis Complete!
 ```
 
-**Generated Report** (`campaign-report.json`):
+**JSON Export:**
 ```json
 {
-  "title": "Security Campaign Report: Security Assessment 2025",
-  "generated": "2025-11-25T10:30:00.000Z",
-  "campaign": {
-    "name": "Security Assessment 2025",
-    "startTime": "2025-11-25T10:26:00.000Z",
-    "endTime": "2025-11-25T10:30:05.000Z",
-    "duration": "245.67",
-    "mode": "sequential"
+  "timestamp": "2025-11-26T10:30:00.000Z",
+  "target": "google.com",
+  "hostname": "google.com",
+  "port": 443,
+  "tests": {
+    "certificateAnalysis": {
+      "subject": "*.google.com",
+      "issuer": "GTS CA 1C3",
+      "validFrom": "Nov 13 08:21:04 2025 GMT",
+      "validTo": "Feb 05 08:21:03 2026 GMT",
+      "keySize": 2048,
+      "signatureAlgorithm": "sha256WithRSAEncryption",
+      "vulnerabilities": [],
+      "warnings": []
+    },
+    "protocolSupport": [
+      {
+        "protocol": "TLSv1.3",
+        "supported": true,
+        "secure": true,
+        "vulnerability": null
+      }
+    ],
+    "hsts": {
+      "enabled": true,
+      "maxAge": 31536000,
+      "includeSubDomains": true,
+      "preload": true,
+      "warnings": []
+    }
   },
   "summary": {
-    "totalTargets": 5,
-    "totalModules": 3,
-    "totalOperations": 15,
-    "successfulOperations": 14,
-    "failedOperations": 1
-  },
-  "targets": [
-    {
-      "name": "Production API",
-      "vulnerabilities": 4,
-      "status": "completed",
-      "modules": [...]
-    }
-  ],
-  "recommendations": [
-    "Critical: Address all identified vulnerabilities immediately",
-    "Review security configurations across all tested targets",
-    "Review 1 failed operations for potential issues",
-    "High-risk targets identified - prioritize remediation"
-  ]
+    "totalVulnerabilities": 0,
+    "totalWarnings": 0,
+    "timeElapsed": "3.45"
+  }
 }
 ```
 
@@ -312,117 +266,72 @@ Vulnerabilities by Target:
 
 ## 📚 Module Details
 
-### Multi-Target Campaign Manager Features
+### SSL/TLS Analyzer Features
 
-#### 1. Execution Modes
+#### 1. Protocol Version Testing
+- Tests support for SSLv3, TLS 1.0, 1.1, 1.2, 1.3
+- Identifies deprecated protocols (CRITICAL for SSLv3)
+- Recommends TLS 1.2+ only configurations
+- Detects protocol downgrade vulnerabilities
 
-**Sequential Mode:**
-- Tests targets one at a time
-- Predictable execution order
-- Lower resource usage
-- Configurable delays between operations
-- Best for rate-limited environments
+#### 2. Cipher Suite Analysis
+- Negotiates cipher with target server
+- Identifies weak ciphers: RC4, DES, 3DES, MD5, NULL, EXPORT
+- Validates cipher strength (bits)
+- Reports HIGH severity for weak ciphers
 
-**Parallel Mode:**
-- Tests multiple targets simultaneously
-- Faster completion time
-- Configurable concurrency limit
-- Batch processing
-- Best for large-scale assessments
+#### 3. Certificate Analysis
+- Subject and Issuer information
+- Validity period (valid from/to dates)
+- Expiration warnings (30 days threshold)
+- Self-signed certificate detection
+- Key size validation (minimum 2048-bit RSA)
+- Signature algorithm analysis (detects SHA-1)
+- Subject Alternative Names enumeration
+- Serial number and fingerprint
 
-#### 2. Target Management
+#### 4. Certificate Chain Verification
+- Validates complete trust chain
+- Lists all intermediate certificates
+- Detects incomplete chains (MEDIUM severity)
+- Verifies proper certificate hierarchy
 
-- Load targets from JSON files
-- Inline target configuration
-- Per-target custom settings
-- Target naming and identification
-- Flexible configuration inheritance
+#### 5. HTTP to HTTPS Redirect
+- Tests if HTTP (port 80) redirects to HTTPS
+- Validates redirect status codes (301, 302, 307, 308)
+- MEDIUM severity if missing
 
-#### 3. Module Orchestration
-
-- Run any combination of security modules
-- Per-module configuration
-- Automatic result aggregation
-- Module success/failure tracking
-- Time tracking per operation
-
-#### 4. Campaign Analytics
-
-- Real-time operation tracking
-- Success/failure statistics
-- Vulnerability aggregation by target
-- Total operations count
-- Time elapsed measurements
-
-#### 5. Reporting System
-
-- Automated JSON report generation
-- Campaign summary and statistics
-- Target-level vulnerability breakdown
-- Security recommendations
-- Timestamp and duration tracking
-
-#### 6. Queue Management
-
-- Intelligent operation scheduling
-- Configurable delays
-- Batch processing support
-- Concurrent execution control
-- Failed operation tracking
+#### 6. HSTS Configuration
+- Checks Strict-Transport-Security header
+- Validates max-age duration (recommends 1 year minimum)
+- Checks includeSubDomains directive
+- Checks preload directive
+- MEDIUM severity if missing
 
 ---
 
 ## 🔧 Advanced Usage
 
-### Parallel Campaign with High Concurrency
+### Test Custom Port
 
 ```json
 {
-  "campaignManager": {
-    "campaignName": "Fast Scan",
-    "mode": "parallel",
-    "maxConcurrent": 10,
-    "targetsFile": "targets.json",
-    "modules": [
-      { "name": "headerInjection" }
-    ]
+  "sslAnalyzer": {
+    "target": "example.com:8443"
   }
 }
 ```
 
-### Sequential Campaign with Delays
+### Batch Testing Multiple Domains
 
-```json
-{
-  "campaignManager": {
-    "campaignName": "Stealth Scan",
-    "mode": "sequential",
-    "delayBetweenTargets": 5000,
-    "delayBetweenModules": 2000,
-    "targetsFile": "targets.json",
-    "modules": [
-      { "name": "subdomainEnumerator" },
-      { "name": "headerInjection" }
-    ]
-  }
-}
-```
+```javascript
+const SSLAnalyzer = require('./modules/sslAnalyzer');
 
-### Inline Targets Configuration
+const domains = ['google.com', 'github.com', 'example.com'];
 
-```json
-{
-  "campaignManager": {
-    "campaignName": "Quick Test",
-    "mode": "sequential",
-    "targets": [
-      {
-        "name": "API",
-        "config": { "targetUrl": "https://api.example.com" }
-      }
-    ],
-    "modules": [...]
-  }
+for (const domain of domains) {
+  const analyzer = new SSLAnalyzer({ target: domain });
+  await analyzer.run();
 }
 ```
 
@@ -430,32 +339,32 @@ Vulnerabilities by Target:
 
 ## 🐛 Troubleshooting
 
-### Campaign Manager Issues
+### SSL/TLS Analyzer Issues
 
-**Problem**: "No targets configured"
-- **Solution**: Ensure targetsFile exists or targets array is populated
+**Problem**: "Failed to connect"
+- **Solution**: Check if target is accessible on port 443, verify hostname
 
-**Problem**: "Module not found"
-- **Solution**: Check module name spelling, only supported modules work
+**Problem**: "Connection timeout"
+- **Solution**: Target may be blocking connections, increase timeout
 
-**Problem**: "High failure rate"
-- **Solution**: Increase delays, check target accessibility
+**Problem**: "Protocol not supported" errors
+- **Solution**: Normal behavior, means deprecated protocols are disabled (good!)
 
-**Problem**: "Slow parallel execution"
-- **Solution**: Increase maxConcurrent value for faster processing
+**Problem**: "Certificate chain incomplete"
+- **Solution**: Server misconfiguration, report to target admin
 
 ---
 
 ## 📖 Best Practices
 
-1. **Start with Sequential Mode**: Test with sequential before parallel
-2. **Use Appropriate Delays**: Respect rate limits and server load
-3. **Monitor Progress**: Watch real-time output for issues
-4. **Review Reports**: Analyze generated reports thoroughly
-5. **Prioritize Targets**: Focus on critical assets first
-6. **Test Configuration**: Validate on small target set first
-7. **Keep Records**: Export and archive campaign results
-8. **Incremental Testing**: Run campaigns in stages for large infrastructures
+1. **Regular Scanning**: Test SSL/TLS configuration regularly
+2. **Protocol Updates**: Disable SSLv3, TLS 1.0, TLS 1.1
+3. **Strong Ciphers**: Use only modern cipher suites
+4. **Certificate Monitoring**: Track expiration dates
+5. **HSTS Deployment**: Enable with long max-age
+6. **Certificate Transparency**: Monitor CT logs
+7. **Key Management**: Use 2048-bit or higher keys
+8. **Chain Validation**: Ensure complete certificate chains
 
 ---
 
@@ -484,13 +393,6 @@ MIT License. See [LICENSE](LICENSE) for details.
 - **Email**: picobaz3@gmail.com
 - **Telegram**: [@picobaz](https://t.me/picobaz)
 - **Issues**: [GitHub Issues](https://github.com/PicoBaz/NexusBrute/issues)
-
----
-
-## 🌟 Star History
-
-If you find NexusBrute useful, please consider giving it a star! ⭐
-
 
 ---
 

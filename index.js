@@ -15,6 +15,7 @@ const HeaderInjection = require('./modules/headerInjection');
 const WebSocketTester = require('./modules/websocketTester');
 const SubdomainEnumerator = require('./modules/subdomainEnumerator');
 const CampaignManager = require('./modules/campaignManager');
+const SSLAnalyzer = require('./modules/sslAnalyzer');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -46,8 +47,9 @@ function showMenu() {
   console.log(chalk.white('9. Header Injection Tester'));
   console.log(chalk.white('10. WebSocket Security Tester'));
   console.log(chalk.white('11. Subdomain Enumerator'));
-  console.log(chalk.white('12. Multi-Target Campaign Manager 🎯'));
-  console.log(chalk.white('13. Exit\n'));
+  console.log(chalk.white('12. Multi-Target Campaign Manager'));
+  console.log(chalk.white('13. SSL/TLS Analyzer 🔒'));
+  console.log(chalk.white('14. Exit\n'));
 }
 
 function askForOutputFormat(callback) {
@@ -214,6 +216,17 @@ async function runModule(choice) {
       break;
 
     case '13':
+      console.log(chalk.green('\n🔒 Starting SSL/TLS Analyzer...\n'));
+      module = new SSLAnalyzer(config.sslAnalyzer);
+      results = await module.run();
+      askForOutputFormat((format) => {
+        saveResults('ssl', module, format);
+        showMenu();
+        promptUser();
+      });
+      break;
+
+    case '14':
       console.log(chalk.bold.cyan('\n👋 Thanks for using NexusBrute! Stay Ethical! 🌌\n'));
       rl.close();
       process.exit(0);

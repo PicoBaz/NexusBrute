@@ -5,7 +5,40 @@ All notable changes to NexusBrute will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ---
+## [2.5.0] - 2025-11-26
 
+### Added
+- **SSL/TLS Analyzer Module**: Comprehensive SSL/TLS security testing and certificate analysis
+  - SSL/TLS protocol version testing (SSLv3, TLS 1.0, 1.1, 1.2, 1.3)
+  - Cipher suite analysis and weak cipher detection
+  - Certificate validation and expiration checking
+  - Self-signed certificate detection
+  - Certificate chain verification
+  - Key size validation (RSA, ECDSA)
+  - Signature algorithm analysis
+  - Subject Alternative Names (SAN) enumeration
+  - HTTP to HTTPS redirect testing
+  - HSTS (HTTP Strict Transport Security) validation
+  - Certificate authority verification
+  - Automatic vulnerability classification
+  - JSON and CSV export support
+- Enhanced module menu with SSL/TLS Analyzer option
+
+### Changed
+- Updated `config.json` with `sslAnalyzer` configuration section
+- Updated `index.js` to include SSL/TLS Analyzer in main menu (option 13)
+- Updated `package.json` to version 2.5.0
+- Expanded README.md with comprehensive SSL/TLS Analyzer documentation
+- Updated module count from 12 to 13 modules
+
+### Security
+- Detection of deprecated SSL/TLS protocols
+- Identification of weak cipher suites
+- Certificate expiration warnings
+- Self-signed certificate alerts
+- HSTS misconfiguration detection
+
+---
 ## [2.4.0] - 2025-11-25
 
 ### Added

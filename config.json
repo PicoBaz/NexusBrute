@@ -61,7 +61,7 @@
     "logFile": "session.log"
   },
   "jwtAnalyzer": {
-    "token": "JWT Token",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
     "targetUrl": "https://api.example.com/protected",
     "wordlistFile": "wordlists/jwt_secrets.txt",
     "publicKeyFile": "keys/public.pem",
@@ -118,5 +118,8 @@
     "maxConcurrent": 3,
     "generateReport": true,
     "reportPath": "results/campaign-report.json"
+  },
+  "sslAnalyzer": {
+    "target": "example.com"
   }
 }
