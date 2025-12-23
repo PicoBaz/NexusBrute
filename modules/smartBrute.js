@@ -1,9 +1,9 @@
 const axios = require('axios');
 const chalk = require('chalk');
 const { ProxyRotator } = require('./proxy_rotator');
-const sessionLogger = require('./session_logger');
+const sessionLogger = require('./sessionLogger');
 
-async function brute(config, sessionLog) {
+async function smartBrute(config, sessionLog) {
     const { targetUrl, usernames, passwords, delayMs, maxAttempts, useProxy } = config.smartBrute;
     const results = [];
     let attempts = 0;
@@ -59,4 +59,4 @@ async function brute(config, sessionLog) {
     return results;
 }
 
-module.exports = { brute };
+module.exports = smartBrute;

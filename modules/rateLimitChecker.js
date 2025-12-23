@@ -1,7 +1,7 @@
 const axios = require('axios');
 const chalk = require('chalk');
 const { ProxyRotator } = require('./proxy_rotator');
-const sessionLogger = require('./session_logger');
+const sessionLogger = require('./sessionLogger');
 
 async function check(config, sessionLog) {
     const { targetUrl, maxRequests, intervalMs, useProxy } = config.rateLimitChecker;
@@ -59,4 +59,4 @@ async function check(config, sessionLog) {
     return results;
 }
 
-module.exports = { check };
+module.exports = check;

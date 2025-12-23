@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
 const chalk = require('chalk');
-const sessionLogger = require('./session_logger');
+const sessionLogger = require('./sessionLogger');
 
 async function optimize(config, sessionLog) {
     const { inputFile, outputFile, minLength, removeDuplicates, sortByLength } = config.wordlistOptimizer;
@@ -81,4 +81,4 @@ async function optimize(config, sessionLog) {
     return results;
 }
 
-module.exports = { optimize };
+module.exports = optimize;

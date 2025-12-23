@@ -1,6 +1,6 @@
 const axios = require('axios');
 const chalk = require('chalk');
-const sessionLogger = require('./session_logger');
+const sessionLogger = require('./sessionLogger');
 
 class ProxyRotator {
     constructor(proxies) {
@@ -54,4 +54,4 @@ class ProxyRotator {
     }
 }
 
-module.exports = { ProxyRotator };
+module.exports = ProxyRotator;

@@ -21,4 +21,4 @@ async function save(config, sessionLog) {
     }
 }
 
-module.exports = { log, save };
+module.exports = log;

@@ -2,9 +2,9 @@ const axios = require('axios');
 const chalk = require('chalk');
 const fs = require('fs').promises;
 const { ProxyRotator } = require('./proxy_rotator');
-const sessionLogger = require('./session_logger');
+const sessionLogger = require('./sessionLogger');
 
-async function test(config, sessionLog) {
+async function SqlInjection(config, sessionLog) {
     const { targetUrl, payloadFile, fields, maxAttempts, delayMs, useProxy } = config.sqlInjection;
     const results = [];
     let attempts = 0;
@@ -80,4 +80,4 @@ async function test(config, sessionLog) {
     return results;
 }
 
-module.exports = { test };
+module.exports = SqlInjection;

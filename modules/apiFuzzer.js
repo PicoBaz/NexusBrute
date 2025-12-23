@@ -1,7 +1,7 @@
 const axios = require('axios');
 const chalk = require('chalk');
 const { ProxyRotator } = require('./proxy_rotator');
-const sessionLogger = require('./session_logger');
+const sessionLogger = require('./sessionLogger');
 
 async function fuzz(config, sessionLog) {
     const { targetUrl, methods, payloads, maxAttempts, delayMs, useProxy } = config.apiFuzzer;
@@ -72,4 +72,4 @@ async function fuzz(config, sessionLog) {
     return results;
 }
 
-module.exports = { fuzz };
+module.exports = fuzz;

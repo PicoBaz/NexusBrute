@@ -1,5 +1,5 @@
 const chalk = require('chalk');
-const sessionLogger = require('./session_logger');
+const sessionLogger = require('./sessionLogger');
 
 async function generate(config, sessionLog) {
     const { length, count, useSpecialChars } = config.passwordGenerator;
@@ -32,4 +32,4 @@ async function generate(config, sessionLog) {
     return results;
 }
 
-module.exports = { generate };
+module.exports = generate;
