@@ -4,7 +4,40 @@ All notable changes to NexusBrute will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 ---
+
+## [2.6.0] - 2025-11-27
+
+### Added
+- **Authentication Bypass Tester Module**: Comprehensive authentication vulnerability scanner
+  - Default credentials testing with 20+ common combinations
+  - Session fixation vulnerability detection
+  - Cookie manipulation testing (8 bypass techniques)
+  - JWT token manipulation (None Algorithm, role manipulation, user ID tampering)
+  - Password reset vulnerability testing
+  - Automatic vulnerability classification with severity levels
+  - Support for selective test execution
+  - Real-time progress tracking
+  - JSON and CSV export support
+- Enhanced module menu with Authentication Bypass Tester option
+
+### Changed
+- Updated `config.json` with `authBypass` configuration section
+- Updated `index.js` to include Authentication Bypass Tester in main menu (option 14)
+- Updated `package.json` to version 2.6.0
+- Expanded README.md with comprehensive Authentication Bypass Tester documentation
+- Updated module count from 13 to 14 modules
+
+### Security
+- Detection of default credentials (CRITICAL severity)
+- Session fixation identification (HIGH severity)
+- Cookie-based authentication bypass (HIGH severity)
+- JWT manipulation vulnerabilities (CRITICAL severity)
+- Password reset exploitation (CRITICAL severity)
+
+---
+
 ## [2.5.0] - 2025-11-26
 
 ### Added
@@ -39,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - HSTS misconfiguration detection
 
 ---
+
 ## [2.4.0] - 2025-11-25
 
 ### Added
@@ -199,33 +233,330 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.0] - 2025-11-10
 
-## [v1.3.0] - 2025-09-14
-- Added **DDoS Tester** module for controlled distributed stress testing with proxy rotation.
-- Updated `index.js` to include DDoS Tester in the CLI menu.
-- Added `ddosTester` configuration in `config.json` for request count, concurrency, and rate.
-- Strengthened legal warnings in `README.md` and CLI for DDoS Tester.
-- Bumped version to `1.3.0` in `package.json` and `README.md`.
+### Added
+- **Smart Brute Force Module**: Intelligent login testing
+  - Rate-limited brute force with customizable delays
+  - Proxy rotation support
+  - Multiple username/password combinations
+  - Success/failure tracking
+- **Password Generator Module**: Strong password generation
+  - Customizable length and complexity
+  - Special character inclusion
+  - Bulk generation support
+  - Cryptographically secure randomization
+- **Rate Limit Checker Module**: API rate limit analysis
+  - Automated rate limit detection
+  - Request timing analysis
+  - Threshold identification
+- **Wordlist Optimizer Module**: Password list optimization
+  - Duplicate removal
+  - Length-based filtering
+  - Sorting capabilities
+  - Memory-efficient processing
+- **API Fuzzer Module**: Comprehensive API testing
+  - Multiple HTTP method support
+  - Custom payload injection
+  - Response analysis
+  - Vulnerability pattern detection
+- **SQL Injection Tester Module**: Automated SQL injection detection
+  - Extensive payload database
+  - Multiple injection techniques
+  - Field-based testing
+  - Error-based detection
+- **DDoS Tester Module**: Load testing and stress analysis
+  - Concurrent request simulation
+  - Configurable request rates
+  - Multiple HTTP methods
+  - Performance monitoring
+- **Session Logger Module**: Activity logging
+  - Comprehensive audit trails
+  - Session tracking
+- **Proxy Rotator**: Dynamic proxy management
+  - Automatic proxy switching
+  - Protocol support (HTTP/HTTPS/SOCKS)
+  - Load distribution
+- Interactive CLI with color-coded output
+- Modular architecture for easy extensibility
+- JSON and CSV export functionality
+- Comprehensive configuration system
+- MIT License
 
-## [v1.2.1] - 2025-09-09
-- Separated SQL Injection payloads into `payloads/sql_payloads.json` for better modularity.
-- Updated `sql_injection.js` to load payloads from `sql_payloads.json`.
-- Updated `config.json` to reference `sql_payloads.json` via `payloadFile`.
-- Bumped version to `1.2.1` in `package.json` and `README.md`.
+### Documentation
+- Complete README with usage examples
+- Module-specific documentation
+- Configuration guidelines
+- Best practices and legal disclaimer
+- Contributing guidelines
 
-## [v1.2.0] - 2025-09-09
-- Added **SQL Injection** module for testing forms with SQLi payloads.
-- Updated `index.js` to include SQL Injection in the CLI menu.
-- Added `sqlInjection` configuration in `config.json` with payloads and fields.
-- Strengthened legal warnings in `README.md` and CLI.
-- Bumped version to `1.2.0` in `package.json` and `README.md`.
+### Security
+- Rate limiting to prevent service disruption
+- Configurable delays for ethical testing
+- Timeout protection
+- Error handling for graceful failures
 
-## [v1.1.0] - 2025-08-30
-- Added **Proxy Rotator** module for dynamic proxy switching.
-- Replaced `proxy_support.js` with `proxy_rotator.js` for enhanced stealth.
-- Updated `smart_brute.js`, `rate_limit_checker.js`, and `api_fuzzer.js` to use Proxy Rotator.
-- Updated `config.json` to support multiple proxies (`proxies` array).
-- Introduced `CHANGELOG.md` for version tracking.
+---
 
-## [v1.0.0] - 2025-08-28
-- Initial release with Smart Brute, Password Generator, Rate Limit Checker, Wordlist Optimizer, API Fuzzer, Session Logger, and Interactive CLI.
+## Release Notes
+
+### [2.2.0] - WebSocket Security Scanner
+
+This release introduces advanced WebSocket vulnerability testing capabilities, expanding NexusBrute's coverage to real-time communication protocols.
+
+**Key Highlights:**
+- 135+ test scenarios across 7 attack categories
+- Real-time message logging and monitoring
+- Intelligent vulnerability detection algorithms
+- Comprehensive WebSocket security coverage
+
+**Use Cases:**
+- Real-time application security testing (chat, gaming, dashboards)
+- WebSocket API security audits
+- Bug bounty hunting for WebSocket vulnerabilities
+- Security training and research
+
+### [2.1.0] - Header Injection Security Scanner
+
+This release introduces advanced HTTP header vulnerability testing capabilities, making NexusBrute a more complete penetration testing toolkit.
+
+**Key Highlights:**
+- 50+ injection payloads across 4 attack categories
+- Intelligent vulnerability detection algorithms
+- Risk-based severity classification
+- Professional reporting format
+
+**Use Cases:**
+- Web application security audits
+- API security testing
+- Bug bounty hunting
+- Security compliance validation
+
+### [2.0.0] - JWT Security Arsenal
+
+Major release introducing professional-grade JWT security testing capabilities.
+
+**Key Highlights:**
+- Complete JWT token analysis and manipulation
+- Multiple attack vectors (None Algorithm, Secret Bruteforce, Key Confusion, Claims Manipulation)
+- Automated security vulnerability detection
+- Professional penetration testing capabilities
+
+**Use Cases:**
+- API authentication security audits
+- Token-based authentication testing
+- Bug bounty programs
+- Security training and research
+
+### [1.0.0] - Initial Release
+
+First stable release of NexusBrute with 8 core security testing modules.
+
+**Core Features:**
+- Modular architecture
+- Interactive CLI interface
+- Multiple export formats
+- Proxy rotation support
+- Comprehensive documentation
+
+---
+
+## Upgrade Guide
+
+### From 2.5.0 to 2.6.0
+
+1. Pull the latest changes:
+```bash
+git pull origin main
+```
+
+2. Update `config.json` with new `authBypass` section:
+```json
+{
+  "authBypass": {
+    "targetUrl": "https://example.com/login",
+    "passwordResetUrl": "https://example.com/reset-password",
+    "jwtToken": "",
+    "tests": ["all"],
+    "delay": 500,
+    "useProxy": false
+  }
+}
+```
+
+3. Ensure `authBypass.js` is in `modules/` directory
+
+4. Run the updated tool:
+```bash
+node index.js
+```
+
+### From 2.4.0 to 2.5.0
+
+1. Pull the latest changes:
+```bash
+git pull origin main
+```
+
+2. Update `config.json` with new `sslAnalyzer` section:
+```json
+{
+  "sslAnalyzer": {
+    "target": "example.com"
+  }
+}
+```
+
+3. Ensure `sslAnalyzer.js` is in `modules/` directory
+
+4. Run the updated tool:
+```bash
+node index.js
+```
+
+### From 2.3.0 to 2.4.0
+
+1. Pull the latest changes:
+```bash
+git pull origin main
+```
+
+2. Update `config.json` with new `campaignManager` section:
+```json
+{
+  "campaignManager": {
+    "campaignName": "Security Assessment 2025",
+    "mode": "sequential",
+    "targetsFile": "campaign-targets.json",
+    "modules": [
+      {
+        "name": "headerInjection",
+        "config": { "testTypes": ["all"] }
+      }
+    ],
+    "generateReport": true
+  }
+}
+```
+
+3. Create campaign targets file `campaign-targets.json`
+
+4. Ensure `campaignManager.js` is in `modules/` directory
+
+5. Run the updated tool:
+```bash
+node index.js
+```
+
+### From 2.2.0 to 2.3.0
+
+1. Pull the latest changes:
+```bash
+git pull origin main
+```
+
+2. Update `config.json` with new `subdomainEnumerator` section:
+```json
+{
+  "subdomainEnumerator": {
+    "domain": "example.com",
+    "methods": ["all"],
+    "wordlistFile": "wordlists/subdomains.txt",
+    "delay": 100,
+    "checkWildcard": true
+  }
+}
+```
+
+3. Add subdomain wordlist to `wordlists/subdomains.txt`
+
+4. Ensure `subdomainEnumerator.js` is in `modules/` directory
+
+5. Run the updated tool:
+```bash
+node index.js
+```
+
+### From 2.1.0 to 2.2.0
+
+1. Pull the latest changes:
+```bash
+git pull origin main
+```
+
+2. Install new WebSocket dependency:
+```bash
+npm install ws
+```
+
+3. Update `config.json` with new `websocketTester` section:
+```json
+{
+  "websocketTester": {
+    "targetUrl": "wss://example.com/ws",
+    "testTypes": ["all"],
+    "delay": 500,
+    "rateLimitTest": {
+      "maxMessages": 100,
+      "interval": 10
+    }
+  }
+}
+```
+
+4. Ensure `websocketTester.js` is in `modules/` directory
+
+5. Run the updated tool:
+```bash
+node index.js
+```
+
+### From 2.0.0 to 2.1.0
+
+1. Pull the latest changes:
+```bash
+git pull origin main
+```
+
+2. Update `config.json` with new `headerInjection` section:
+```json
+{
+  "headerInjection": {
+    "targetUrl": "https://example.com",
+    "testTypes": ["all"],
+    "delay": 500,
+    "useProxy": false
+  }
+}
+```
+
+3. Ensure `headerInjection.js` is in `modules/` directory
+
+4. Run the updated tool:
+```bash
+node index.js
+```
+
+### From 1.0.0 to 2.0.0
+
+1. Pull the latest changes
+2. Create required directories:
+```bash
+mkdir wordlists keys
+```
+
+3. Update `config.json` with `jwtAnalyzer` section
+4. Add sample wordlist to `wordlists/jwt_secrets.txt`
+
+---
+
+## Links
+
+- [GitHub Repository](https://github.com/PicoBaz/NexusBrute)
+- [Report Issues](https://github.com/PicoBaz/NexusBrute/issues)
+- [Discussions](https://github.com/PicoBaz/NexusBrute/discussions)
+
+---
+
+**Maintained by**: [@PicoBaz](https://github.com/PicoBaz)  
+**Contact**: picobaz3@gmail.com | [@picobaz](https://t.me/picobaz)

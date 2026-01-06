@@ -121,5 +121,13 @@
   },
   "sslAnalyzer": {
     "target": "example.com"
+  },
+  "authBypass": {
+    "targetUrl": "https://example.com/login",
+    "passwordResetUrl": "https://example.com/reset-password",
+    "jwtToken": "",
+    "tests": ["all"],
+    "delay": 500,
+    "useProxy": false
   }
 }
